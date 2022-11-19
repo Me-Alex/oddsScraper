@@ -1,0 +1,44 @@
+html, body {
+    padding: 0;
+    margin: 0;
+
+}
+
+.colums {
+
+    display: flex;
+    flex-direction: row;
+    /* background-color: white; */
+    gap: 20px;
+    margin: 0 20px 0 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.col {
+    display: flex;
+    /* flex-direction: column; */
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    padding: 0 5px 0 5px;
+}
+.col span{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.col p { 
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    background-color: red;
+}
