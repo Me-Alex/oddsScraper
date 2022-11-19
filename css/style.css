@@ -44,3 +44,13 @@ html, body {
     height: 300px;
     background-color: red;
 }
+
+.pariaza-aici{
+    width: fit-content;
+    padding: 5px;
+    color:black;
+    font-size: 15px;
+    text-align: center;
+    background-color: white;
+    margin: 0 auto;
+}

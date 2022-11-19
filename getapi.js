@@ -34,7 +34,10 @@ async function showToFrontEnd() {
     let body = document.querySelector('body');
 
     let copyContainer = document.querySelector('.container');
+    let link=document.querySelector(".pariaza-aici");
+
     copyContainer.outerHTML = "";
+    console.log(link);
     var ddata = {
         data1: [],
     };
@@ -80,6 +83,9 @@ async function showToFrontEnd() {
                     if (ddata.data1[ii].data.event.markets[j].name == "Niciun pariu pe egal") {
                         copyContainer.childNodes[5].childNodes[1].childNodes[3].innerHTML = ddata.data1[ii].data.event.markets[j].selections[0].price;
                         copyContainer.childNodes[5].childNodes[5].childNodes[2].innerHTML = ddata.data1[ii].data.event.markets[j].selections[1].price;
+                      let parseLink=links.link[ii].split("/api");
+                    //   console.log(parseLink);
+                        link.href=parseLink[0]+parseLink[1];
                         body.innerHTML += copyContainer.outerHTML;
                         console.log("an ahybs su aici");
                         break;
