@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<!--
+	Striped by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+
+<head>
+    <title>Odder</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
+</head>
+
+<body class="is-preload">
+
+    <!-- Content -->
+    <div class="containerBody2">
+        <div class="containerB">
+            <div class="card">
+                <div class="card_title">
+                    <h1>Upcoming Match</h1>
+                    <p id="match_type">T20 1 of 60</p>
+                </div>
+                <div class="match_info">
+                    <div class="team_name">
+                        <div class="team1">
+                            <img src="images/defaulLogo.png" alt="" />
+                            <h3 class="team1Name">MI</h3>
+                        </div>
+                        <div class="team2">
+                            <img src="images/defaulLogo1.png" alt="" />
+                            <h3 class="team2Name">RCB</h3>
+                        </div>
+                    </div>
+
+                    <div class="vs">
+                        vs
+                    </div>
+                    <div class="date_time">
+                    </div>
+                </div>
+                <div class="seeDetails">
+                    <a href="">See All
+                        <span><i class="fa fa-caret-down" aria-hidden="true"></i> </span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <a href="login.html" class="hide">Login</a>
+        <a href="login.html" class="hide1" style="margin-left:50px">Sign Up</a>
+        <h3 class="name"></h3>
+
+        <!-- Logo -->
+        <h1 id="logo"><a href="#"> Odder</a></h1>
+        <br>
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <div>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+
+                </div>
+                <div>
+                    <li>
+                        <a href="profile.html">Profil</a>
+                    </li>
+
+                </div>
+                <li class="logout"> <a>Log out</a> </li>
+                <script>
+                    if (localStorage.getItem("User"))
+                        document.querySelector(".logout").style.display = "inherit";
+                </script>
+            </ul>
+        </nav>
+
+        <!-- Search -->
+        <section class="box search">
+            <form method="post" action="#">
+                <input type="text" class="text" name="search" placeholder="Search" />
+            </form>
+        </section>
+
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- <script type="module" src="sign-inGoogle.js"></script> -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="fireabase-config.js"></script>
+
+    <script src="getapi.js"></script>
+    <script type="module" src="sign-inGoogle.js"></script>
+    <script type="module" src="matches.js"></script>
+
+</body>
+
+</html>

@@ -11,6 +11,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="css/profile.css" />
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
@@ -18,45 +19,44 @@
 </head>
 
 <body class="is-preload">
-
-
-	<!-- <script type="module" src="fireabase-config.js"></script> -->
-
+	
+	<br>
+	<div class="profileContainer">
+		<div class="imgContainer">
+			<img id="profileImg" src="" alt="">
+		</div>
+		<div class="credentials">
+			<div class="userDisplayName">
+				<p>Nume</p>
+				<p id="UserName"></p>
+			</div>
+			<div class="userDisplayEmail">
+				<p>Email</p>
+				<p id="email"></p>
+			</div>
+			<div class="userCurrency">
+				<p>Currency</p>
+				<p id="currency">RON</p>
+			</div>
+			<div class="userBetsPlaced">
+				<p>Bets placed</p>
+				<p id="betsPlaced"></p>
+			</div>
+			<div class="totalBettedValue">
+				<p>Bets placed</p>
+				<p id="BettedValue"></p>
+			</div>
+			<div class="userProfits">
+				<p>Profit</p>
+				<p id="profits"></p>
+			</div>
+		</div>
+		<button>Press me for showing the profit </button>
+	</div>
 
 
 	<!-- Content -->
-	<div class="containerBody">
 
-		<div class="container">
-			<h1>Bett website </h1>
-			<div class="colums">
-				<div class="col">
-					<p>1(Ehipa1) -</p> <span>null</span>
-				</div>
-				<div class="col">
-					<p>X(pauza) -</p> <span>null</span>
-				</div>
-				<div class="col">
-					<p>2(Ehipa2) -</p><span>null</span>
-				</div>
-				<!-- <div class="col"></div> -->
-			</div>
-			<div class="colums">
-				<div class="col">
-					<p>1(Ehipa1 niciun pariu pe egal) -</p> <span>null</span>
-				</div>
-				<div class="col" style="background-color: red;">
-					<p></p> <span></span>
-				</div>
-				<div class="col">
-					<p>2(Ehipa2 niciun pariu pe egal) -</p><span>null</span>
-				</div>
-				<!-- <div class="col"></div> -->
-			</div>
-			<a class="pariaza-aici" target="_blank" href="">Pariaza aici</a>
-
-		</div>
-	</div>
 	<!-- Sidebar -->
 	<div id="sidebar">
 		<a href="login.html" class="hide">Login</a>
@@ -66,46 +66,20 @@
 		<!-- Logo -->
 		<h1 id="logo"><a href="#"> Odder</a></h1>
 		<br>
+
 		<!-- Nav -->
 		<nav id="nav">
 			<ul>
 				<div>
 					<li>
+						<a href="index.html">Home</a>
+					</li>
+
+				</div>	<div>
+					<li>
 						<a href="matches.html">Meciuri</a>
 					</li>
 
-				</div>
-				<li class="current" onclick="show()"><a href="#">Admin Comands <i class="arrow down"></i></a></li>
-				<div class="show">
-					<li>
-						<button onclick="showToFrontEnd()">Show Matches</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="showToFrontEndEfortuna()">Show Matches Efortuna</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="showToFrontEndEsportsBattleMatthes()">Esports Battle
-							API</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="writeMatchesToDB()">Incarca meciuri catre baza de
-							date</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="removeMatches()">Remove</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="readDataFromDatabase()">Read data</button>
-					</li>
-
-					<li>
-						<button class="esportButton" onclick="checkHowManyEqualsHasBeenMade()">Nr Total De meciuri /Nr
-							Egaluri</button>
-					</li>
-					<li>
-						<button class="esportButton" onclick="statisticiMeciuri()">Strategie Nr Par/Impar
-							meciuri</button>
-					</li>
 				</div>
 				<li class="logout"> <a>Log out</a> </li>
 				<script>
@@ -122,7 +96,25 @@
 			</form>
 		</section>
 
+		<script>
+			let user = localStorage.getItem("User");
+			let email = localStorage.getItem("Email");
+			let photo = localStorage.getItem("Photo");
+			if (user) {
+				document.querySelector(".hide").style.display = "none";
+				document.querySelector(".hide1").style.display = "none";
+				document.querySelector(".name").onclick = () => {
+					window.location = "http://127.0.0.1:5500/profile.html";
+				}
+				document.querySelector(".name").innerHTML = user;
+				document.querySelector(".name").style.cursor = "pointer";
+				// console.log("fkldajfkljsdklfajsdklfj alkdfj alksfj kalj")
+				document.querySelector("#UserName").innerHTML = user;
+				document.querySelector("#profileImg").src = photo;
+				document.querySelector("#email").innerHTML = email;
 
+			}
+		</script>
 	</div>
 
 	<!-- Scripts -->
@@ -139,6 +131,7 @@
 
 	<script src="getapi.js"></script>
 	<script type="module" src="sign-inGoogle.js"></script>
+	<script type="module" src="profile.js"></script>
 
 
 

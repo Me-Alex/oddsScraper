@@ -1,0 +1,31 @@
+.row{
+    display:flex;
+    gap:20px;
+}
+body{
+    width: 100%;
+}
+.matchOdds{
+    width: fit-content;
+    margin: 0 auto;
+}
+.mactchPrimaryResults{
+    display: flex;
+    width:442px;
+    justify-content: center;
+
+    gap:10px;
+}
+.mactchPrimaryResults *{
+    padding: 0 5px 0 5px;
+    width:100%;
+    background-color: black;
+    color:white;
+}
+.teamOdds{
+    color:yellow;
+    text-align: right;
+}
+.margin-down-2px{
+    margin:0 0 2px 0;
+}

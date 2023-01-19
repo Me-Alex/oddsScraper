@@ -12,8 +12,12 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 var database = firebase.database();
+
+
+//DACA CEVA NU MERCE DECOMMNET codul de mai sus 
+
 // console.log(db);
-// db.collection("cities").doc("LA").set({
+// db.collection("mancare5").doc("LA2").collection("mancare5").doc("siID").set({
 //     name: "Los Angeles",
 //     state: "CA",
 //     country: "USA"

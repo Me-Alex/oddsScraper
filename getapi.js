@@ -57,30 +57,35 @@ function afisareMeciuri(copyContainer, link, body, ddata) {
 
 
             }
-            for (let i = 0; i < jsonDataEfortuna.length; i++) {
-                // console.log("te rog mergi");
-                console.log(ddata.data1[ii].data.event.name);
-                console.log(ii + "aici ii");
-                if (ddata.data1[ii].data.event.name == jsonDataEfortuna[i].numeMatch) {
-                    console.log(jsonDataEfortuna[i].numeMatch + ddata.data1[ii].data.event.name);
-                    copyContainer.childNodes[1].innerHTML = jsonDataEfortuna[i].numeMatch + "-> EFORTUNA";
-                    copyContainer.childNodes[3].childNodes[1].childNodes[3].innerHTML = jsonDataEfortuna[i].unu;
-                    // console.log(ddata.data1[ii].data.event.markets[0].selections[0].price);
-                    copyContainer.childNodes[3].childNodes[3].childNodes[3].innerHTML = jsonDataEfortuna[i].X;
-                    copyContainer.childNodes[3].childNodes[5].childNodes[2].innerHTML = jsonDataEfortuna[i].doi;
-                    copyContainer.childNodes[5].childNodes[1].childNodes[3].innerHTML = jsonDataEfortuna[i].victorieFaraEgal.victorieFaraEgal1;
-                    copyContainer.childNodes[5].childNodes[5].childNodes[2].innerHTML = jsonDataEfortuna[i].victorieFaraEgal.victorieFaraEgal2;
-                    body.innerHTML += copyContainer.outerHTML;
-                    break;
 
-                }
-            }
+            //for-ul de mai jos compara numele meciurilor preluate de pe fotruna cu cele de pe betano
+            // nu ne putem baza pe compararea numelelor
+            // deoarece aceiasi echipa poate sa apara diverit pe abele case de pariuri 
+
+            // for (let i = 0; i < jsonDataEfortuna.length; i++) {
+            //     console.log(ddata.data1[ii].data.event.name);
+            //     console.log(ii + "aici ii");
+            //     if (ddata.data1[ii].data.event.name == jsonDataEfortuna[i].numeMatch) {
+            //         console.log(jsonDataEfortuna[i].numeMatch + ddata.data1[ii].data.event.name);
+            //         copyContainer.childNodes[1].innerHTML = jsonDataEfortuna[i].numeMatch + "-> EFORTUNA";
+            //         copyContainer.childNodes[3].childNodes[1].childNodes[3].innerHTML = jsonDataEfortuna[i].unu;
+            //         // console.log(ddata.data1[ii].data.event.markets[0].selections[0].price);
+            //         copyContainer.childNodes[3].childNodes[3].childNodes[3].innerHTML = jsonDataEfortuna[i].X;
+            //         copyContainer.childNodes[3].childNodes[5].childNodes[2].innerHTML = jsonDataEfortuna[i].doi;
+            //         copyContainer.childNodes[5].childNodes[1].childNodes[3].innerHTML = jsonDataEfortuna[i].victorieFaraEgal.victorieFaraEgal1;
+            //         copyContainer.childNodes[5].childNodes[5].childNodes[2].innerHTML = jsonDataEfortuna[i].victorieFaraEgal.victorieFaraEgal2;
+            //         body.innerHTML += copyContainer.outerHTML;
+            //         break;
+
+            //     }
+            // }
         }
     }
 }
 
 async function afisareMeciuriEfortuna(matchData) {
     var counter = 0;
+    let statsUrl;
     for (let i = 0; i < matchData.length; i++) {
         for (let j = 0; j < matchData[i].children[1].querySelectorAll('.row-sub-markets').length * 2; j += 2) {
             if (matchData[i].children[1].children[j].querySelector('.market-name')) {
@@ -90,7 +95,13 @@ async function afisareMeciuriEfortuna(matchData) {
                 let elementHref = matchData[i].parentNode.parentNode.parentNode.previousSibling.previousElementSibling.querySelectorAll('.title-part')[1].childNodes[1].href
                 let MatchLiga = elementHref.split("fotbal/");
                 let matchLigaString = MatchLiga[1];
+                if (matchData[i].children[1].children[j].querySelector(".link-event-icon ")) {
+                    statsUrl = matchData[i].children[1].children[j].querySelector(".link-event-icon ").href;
 
+                }
+
+
+                //from future here , I don't want to even try to think about the code below
                 console.log('');
                 jsonDataEfortuna[counter++] = {
                     numeMatch: temp.attributes[1].value,
@@ -99,9 +110,11 @@ async function afisareMeciuriEfortuna(matchData) {
                     doi: matchData[i].children[1].children[j].children[3].querySelector('.odds-value').innerHTML,
                     leagueURl: "https://efortuna.ro/ajax/pariuri-online/fotbal" + elementHref.split("/fotbal")[1] + "?timeTo=&rateFrom=&rateTo=&type=M2915%7CM2918",
                     leagueName: matchLigaString,
-                    victorieFaraEgal: []
-                }
+                    victorieFaraEgal: [],
+                    statsUrl: statsUrl
 
+                }
+                statsUrl = null;
                 // console.log('am intrat aici');
             }
         }
@@ -134,9 +147,50 @@ async function afisareMeciuriEfortuna(matchData) {
         console.log(i);
     }
     console.log(container);
+    for (let d = 0; d < jsonDataEfortuna.length; d++) {
+        console.log("dkfakldfj adlkjf alkdjf lakdjf lak");
+
+        let uSplit = jsonDataEfortuna[1].statsUrl.split('match/');
+        const options1 = { method: 'GET', headers: { 'Content-Type': 'application/json' } };
+
+        let getTheResponseUrl = async () => {
+            const ee = await fetchUrl1(jsonDataEfortuna[d].statsUrl, options1);
+            jsonDataEfortuna[d].statsUrl = ee;
+            let id = ee.split("match/");
+            console.log(ee);
+            let nume = jsonDataEfortuna[d].numeMatch;
+            let nnume = nume.replace('.', "");
+            firebase.database().ref("meciuri-eFortunaWithId/" + id[1] + "/").set({
+                match: jsonDataEfortuna[d]
+            }, function (error) {
+                if (error) {
+                    // The write failed...
+
+                    console.log({ error });
+                } else {
+
+
+                    console.log("success");
+                    // Data saved successfully!
+                }
+            });
+        }
+        setTimeout(getTheResponseUrl, 4000);
+
+
+    }
 
 }
 
+
+async function fetchUrl1(url) {
+    const fetchedData = await fetch(url)
+        .then(response => response.url)
+        .catch(err => console.error(err));
+
+    return fetchedData;
+
+}
 async function fetchUrlText(url) {
     const fetchedData = await fetch(url, options)
         .then(response => response.text())
@@ -145,6 +199,19 @@ async function fetchUrlText(url) {
     return fetchedData;
 
 }
+async function fetchUrl(url) {
+    const fetchedData = await fetch(url, options)
+        .then(response => response.url)
+        .catch(err => console.error(err));
+
+    return fetchedData;
+
+}
+let aaa = ['https://s5.sir.sportradar.com/fortuna2/ro/m61616356', 'fdfadsf'];
+let getTheResponseUrl = async () => {
+    const ee = await fetchUrl(aaa[0]);
+    console.log(ee);
+}
 async function fetchUrlJson(url) {
     const fetchedData = await fetch(url, options)
         .then(response => response.json())
@@ -152,6 +219,26 @@ async function fetchUrlJson(url) {
 
     return fetchedData;
 
+}
+
+function writeToDbNoModular(path, obj) {
+    firebase.database().ref(path).set({
+        sportRadarUrl: obj.sportRadarUrl,
+        sportRadarUrlAnchor: obj.sportRadarUrlAnchor,
+        eFortunaUrl: obj.eFortunaUrl,
+        sportRadarID: obj.sportRadarID,
+    }, function (error) {
+        if (error) {
+            // The write failed...
+
+            console.log({ error });
+        } else {
+
+
+            console.log("success");
+            // Data saved successfully!
+        }
+    });
 }
 
 async function dataInOneDocument(fortunaDataFetch, className, eFortunaURL2) {
@@ -176,10 +263,12 @@ async function dataInOneDocument(fortunaDataFetch, className, eFortunaURL2) {
             console.log(matchDataContainer);
 
         }
+
     }
+
 }
 var FLAG1 = false;
-
+const options1 = { method: 'GET', headers: { 'Content-Type': 'application/json' } };
 const options = {
     method: 'GET',
     headers: {
@@ -198,10 +287,229 @@ var links = {
 var jsonDataEfortuna = [{
 
 }];
+var fortunaLinks = [];
 var ddata = {
     data1: [],
 };
+const event = new Map();
+getTheResponseUrl();
+let map = [
+    "europa-conference-league",
+    "romania-1",
+    "romania-cupa",
+    "spania-la-liga",
+    "liga-campionilor",
+    "europa-league",
+    "anglia-premier-league",
+    "anglia-cupa-ligii",
+    "anglia-cupa-fa",
+    "spania-cupa",
+    "italia-serie-a",
+    "italia-supercupa",
+    "italia-cupa",
+    "germania-bundesliga",
+    "germania-cupa",
+    "franta-ligue-1",
+    "franta-cupa",
+    "franta-2",
+    "spania-2",
+    "germania-2",
+    "italia-2",
+    "anglia-championship",
+    "anglia-3",
+    "anglia-4",
+    "argentina-1",
+    "austria-1",
+    "australia-1",
+    "belgia-1",
+    "cehia-1",
+    "croatia-1",
+    "danemarca-1",
+    "elvetia-1",
+    "grecia-1",
+    "grecia-cupa",
+    "norvegia-1",
+    "olanda-1",
+    "olanda-2",
+    "portugalia-1",
+    "polonia-1",
+    "rusia-1",
+    "scotia-1",
+    "scotia-cupa",
+    "turcia-1",
+    "ungaria-1",
+    "sua-mls",
+    "meciuri-amicale",
+    "africa-de-sud-1",
+    "africa-de-sud-2",
+    "albania-cupa",
+    "anglia-fa-trophy",
+    "anglia-6-nord",
+    "anglia-6-sud",
+    "arabia-saudita-1",
+    "arabia-saudita-2",
+    "australia-1-f-",
+    "belgia-2",
+    "brazilia-carioca",
+    "brazilia-catarinense",
+    "brazilia-cearense",
+    "brazilia-goiano",
+    "brazilia-paulista",
+    "brazilia-paulista-2",
+    "brazilia-pernambucano",
+    "brazilia-paranaense",
+    "brazilia-alagoano",
+    "brazilia-maranhense",
+    "brazilia-potiguar",
+    "brazilia-baiano",
+    "cehia-2",
+    "chile-1",
+    "cipru-1",
+    "cipru-2",
+    "cipru-cupa",
+    "costa-rica-1",
+    "eau-1",
+    "egipt-1",
+    "franta-3",
+    "germania-3",
+    "germania-4-ne",
+    "grecia-2",
+    "india-super-league",
+    "india-1",
+    "indonezia-1",
+    "irlanda-de-nord-1",
+    "iran-1",
+    "iran-2",
+    "israel-1",
+    "israel-cupa-ligii",
+    "israel-1-f-",
+    "italia-3-a",
+    "italia-3-b",
+    "italia-3-c",
+    "italia-cupa-lp",
+    "kenya-premier-league",
+    "maroc-1",
+    "mexic-1",
+    "mexic-2",
+    "mexic-u20-",
+    "nigeria-1",
+    "palestina-1",
+    "peru-1",
+    "polonia-cupa",
+    "polonia-3_0",
+    "portugalia-cupa-ligii",
+    "portugalia-2",
+    "portugalia-3",
+    "qatar-1",
+    "scotia-3",
+    "scotia-4",
+    "slovacia-1",
+    "spania-3",
+    "spania-supercupa-feminin",
+    "tanzania-1",
+    "tara-galilor-1",
+    "tara-galilor-2-nord",
+    "thailanda-1",
+    "tunisia-1",
+    "turcia-cupa",
+    "turcia-2",
+    "campionatul-americii-de-sud-u20",
+    "campionatul-natiunilor-africane"
+]
+console.log(map);
+let fortunaMatches = [{
+    "europa-conference-league": [{
+        sportRadarUrlAnchor: " ",
+        eFortunaUrl: " "
+    }]
+
+}];
 let linkSportRadar = "https://stats.fn.sportradar.com/betano/ro/Europe:Helsinki/gismo/stats_match_get/";
+async function showToFrontEndEfortuna() {
+    let w1 = "";
+    if (window.location.port) {
+        w1 = window.location.hostname + ":" + window.location.port;
+    }
+    else {
+        w1 = window.location.hostname;
+    }
+    let baseUrl = "https://efortuna.ro/pariuri-online/fotbal/";
+    let baseUrl1 = "https://efortuna.ro";
+    let trueCount = 0;
+    let ok = 0;
+    async function ceva() {
+        for (let index1 = 0; index1 < 1; index1++) {
+            // console.log(index1);
+            console.log(map[index1]);
+            let el1 = map[index1];
+            let el = baseUrl + map[index1];
+            console.log(el);
+            fortunaMatches[el1] = [{
+                sportRadarUrlAnchor: " ",
+                eFortunaUrl: " "
+            }];
+
+            const fortunaDataFetch = await fetchUrlText(el);
+            var parser = new DOMParser();
+            var xmlDoc = parser.parseFromString(fortunaDataFetch, "text/html");
+            console.log(fortunaDataFetch);
+            var matchDataContainer = xmlDoc.querySelectorAll(".link-event-icon.text-middle");
+            var matchDataContainer1 = xmlDoc.querySelectorAll('.event-link.js-event-link');
+            // var time = xmlDoc.querySelectorAll('.event-datetime');
+            // if (index1 == 120) {
+            //     console.log("program finished");
+            //     writeToDb();
+            // }
+            console.log(matchDataContainer);
+            for (let j = 0; j < matchDataContainer.length; j++) {
+                let sID = await fetchUrl1(matchDataContainer[j].href, options1);
+                // console.log(fortunaMatches.length + " " + trueCount);
+
+                fortunaMatches[el1][fortunaMatches[el1].length++] = {
+
+                    sportRadarUrlAnchor: matchDataContainer[j].href,
+                    eFortunaUrl: baseUrl1 + matchDataContainer1[j].href.split(w1)[1]
+
+                }
+
+                // console.log(matchDataContainer[j].href + "\n" + baseUrl1 + matchDataContainer1[j].href.split(w1)[1] + "\n" + sID);
+                // console.log(sID);
+
+                // for (let i = fortunaMatches.length - 1; i >= 0; i--) {
+                //     if (matchDataContainer[j].href == fortunaMatches[el1][i].sportRadarUrlAnchor) {
+                //         ok = 1;
+                //         console.log("aici" + i);
+                //         continue;
+                //     }
+                //     if (i == 0 && ok == 0) {
+                //         console.log(i);
+                //         fortunaMatches[el1][fortunaMatches[el1].length++] = {
+
+                //             sportRadarUrlAnchor: matchDataContainer[j].href,
+                //             eFortunaUrl: baseUrl1 + matchDataContainer1[j].href.split(w1)[1]
+
+                //         }
+
+                //     }
+                //     ok = 0;
+                // }
+
+
+            }
+
+        }
+
+
+    }
+    ceva();
+    async function writeToDb() {
+        fortunaMatches.forEach((match, index) => {
+            writeToDbNoModular('meciuri-eFortunaWithIdv3/' + match.sportRadarID + '/', match);
+        });
+    }
+
+}
+
 async function showToFrontEnd() {
     var theUrl = "https://api.efortuna.ro/live3/api/live/matches/overview";
     let urlBetano = "https://ro.betano.com/api/sport/fotbal/meciurile-urmatoare-de-azi/";
@@ -211,8 +519,10 @@ async function showToFrontEnd() {
     let eFortunaURL1 = "https://efortuna.ro/bets/ajax/loadmoresport/fotbal-cm-2022?type=M235&timeTo=&rateFrom=&rateTo=&date=&selectDates=&filter=today";
     let eFortunaURL2 = "https://efortuna.ro/bets/ajax/loadmoresport/fotbal?timeTo=&rateFrom=&rateTo=&date=&pageSize=100&page=";
     // let sportRadar = "https://ls.fn.sportradar.com/betano/ro/Africa:Johannesburg/gismo/sport_matches/1/2022-12-12/0";
-    const fortunaDataFetch = await fetchUrlText(eFortunaURL2);
-    await dataInOneDocument(fortunaDataFetch, ".events-table", eFortunaURL2);
+
+    // const fortunaDataFetch = await fetchUrlText(eFortunaURL2);
+    // pentru efortuna important
+    // await dataInOneDocument(fortunaDataFetch, ".events-table", eFortunaURL2);
 
     // console.log(matchData[0].children[1].querySelectorAll('.row-sub-markets').length);
     // console.log(xmlDoc);
@@ -230,30 +540,53 @@ async function showToFrontEnd() {
     let nr = 0;
     for (let i = 0; i < vreauJSON1.data.blocks.length; i++) {
         for (let j = 0; j < vreauJSON1.data.blocks[i].events.length; j++) {
-            //mai jos recuperez linkul pentru nicun pariu pe egal
+            //reverse engineering
+            //ma jos creez linkul fiecarui eveniment pentru a accesa toate cotele  pe viitor trebuie simplificat 
             let UrlPariuEgal = "https://ro.betano.com/api";
             let UrlNiciunPariuPeEgal = vreauJSON1.data.blocks[i].events[j].url;
+            // console.log(UrlNiciunPariuPeEgal + " " + i);
             // console.log(UrlNiciunPariuPeEgal);
-            // console.log(UrlNiciunPariuPeEgal);
-            // if (UrlNiciunPariuPeEgal != null) {
-            UrlNiciunPariuPeEgal = UrlPariuEgal + UrlNiciunPariuPeEgal;
-            links.link[nr++] = UrlNiciunPariuPeEgal;
+
+            links.link[nr++] = UrlPariuEgal + UrlNiciunPariuPeEgal;
             links.i[nr] = i;
             links.j[nr] = j;
-            // }
+
 
         }
     }
-
     console.log(links);
     for (let ii = 0; ii < links.link.length; ii++) {
         fetch(links.link[ii], options)
             .then(response => response.json())
             .then(async (response) => {
-                ddata.data1[ii] = await response;
+                ddata.data1[ii] = {
+                    name: await response.data.event.name,
+                    startTime: await response.data.event.startTime,
+                    shortName: await response.data.event.shortName,
+                    leagueDescription: await response.data.event.leagueDescription,
+                    markets: await response.data.event.markets,
+                    statsUrl: await response.data.event.stats[0],
+                    betRadarId: await response.data.event.betRadarId
+                };
             }).then(() => {
+
                 if (ii == links.link.length - 1) {
-                    setInterval(afisareMeciuri(copyContainer, link, body, ddata), 4000);
+                    // am testat cu 230 meciuri si id-ul nu se repeta
+                    // setTimeout(afisareMeciuri(copyContainer, link, body, ddata), 40000);
+                    ddata.data1.forEach((element) => {
+                        if (element.betRadarId)
+                            firebase.database().ref("meciuri-BetanoWithId/" + element.betRadarId + "/").set(
+                                element
+                                , function (error) {
+                                    if (error) {
+                                        // The write failed...
+                                        console.log({ error });
+                                    } else {
+                                        console.log("success");
+                                        // Data saved successfully!
+                                    }
+                                });
+                    })
 
                 }
             }).catch(err => console.error(err));
@@ -287,8 +620,8 @@ async function showToFrontEndEsportsBattleMatthes() {
 function writeMatchesToDB() {
     for (let ii = 0; ii < ddata.data1.length; ii++) {
         var event = ddata.data1[ii].data.event.markets[0];
-        if (ddata.data1[ii].data.event.name !=null) {
-            var playersRef = firebase.database().ref("meciuri-20-12-2022/" + ddata.data1[ii].data.event.name + "/");
+        if (ddata.data1[ii].data.event.name != null) {
+            var playersRef = firebase.database().ref("meciuri-21-12-2022/" + ddata.data1[ii].data.event.name + "/");
             let teamOne = ddata.data1[ii].data.event.markets[0].selections[0].price;
             let equal = ddata.data1[ii].data.event.markets[0].selections[1].price;
             let teamTwo = ddata.data1[ii].data.event.markets[0].selections[2].price;
@@ -331,12 +664,12 @@ function writeScoreMatchesToDB(link) {
     console.log("minic");
 }
 function removeMatches() {
-    var data = firebase.database().ref("meciuri-11-12-2022");
+    var data = firebase.database().ref("meciuri-eFortunaWithIdv3");
     data.remove().then(() => { console.log("location removed"); });
 }
 
 function readDataFromDatabase() {
-    firebase.database().ref('meciuri-18-12-2022').on('value', async (snap) => {
+    firebase.database().ref('meciuri-21-12-2022').on('value', async (snap) => {
         let values = snap.val();
         console.log(snap.val());
         for (const [key, value] of Object.entries(values)) {
@@ -345,7 +678,7 @@ function readDataFromDatabase() {
 
             let matchScore1 = matchScore.doc[0].data.result;
             if (matchScore1) {
-                firebase.database().ref("meciuri-19-12-2022/" + key + "/score").set({
+                firebase.database().ref("meciuri-20-12-2022/" + key + "/score").set({
                     "score": matchScore1
                 }, function (error) {
                     if (error) {
@@ -365,7 +698,7 @@ function readDataFromDatabase() {
     });
 }
 
-//functia de mai jos nu este buna deoarece compara 2 stinguri 
+//functia de mai jos nu este buna deoarece compara 2 stringuri 
 //intre ele deocamdata nu stiu exact daca aceasta este problema
 function checkHowManyEqualsHasBeenMade() {
     firebase.database().ref('meciuri-16-12-2022').on('value', async (snap) => {
@@ -396,34 +729,94 @@ function checkHowManyEqualsHasBeenMade() {
 }
 
 function statisticiMeciuri() {
-    firebase.database().ref('meciuri-19-12-2022').on('value', async (snap) => {
+    firebase.database().ref('meciuri-17-12-2022').on('value', async (snap) => {
         let values = snap.val();
         let AllMatchesNR = 0;
         let AllMatchesNROdd = 0;
         let AllMatchesNREven = 0;
         let AllMatchesNREqual = 0;
+        let AllMatchesNREqualAndOdd = 0;
         let AllMatchesNROddOverOnePointFive = 0;
+        let AllMatchesNROddAndOverTwoPointFive = 0;
+        let AllMatchesNREvenAndOverTwoPointFive = 0;
+        let AllMatchesNREOddAndOverOnePointFive = 0;
         let AllMatchesNREvenOverTwoPointFive = 0;
+        let AllMatchesNROverTwoPointFive = 0;
+        let AllMatchesNROverOnePointFive = 0;
+        let AllMatchesNRInWhichBothTeamScored = 0;
+        let AllMatchesNRUnderOnePointFive = 0;
+        let AllMatchesNRUnderTwoPointFive = 0;
+        let AllMatchesNRInWhichBothTeamsScoredZero = 0;
+        let AllMatchesNRInWhichJustOneTeamScoresOverOnePointFive = 0;
+        let NuInscrieAmbeleEchipeSauSubUnuPunctCinci = 0;
+        let d = 0, d2 = 0;
+        let v = [];
         for (const [key, value] of Object.entries(values)) {
             let checkNull = values[key].score;
-            console.log(values[key]);
+            // console.log(values[key]);
             if (checkNull) {
                 let Scoreteam1 = parseInt(values[key].score.score.home);
                 let Scoreteam2 = parseInt(values[key].score.score.away);
-                AllMatchesNR++;
-                if ((Scoreteam1 + Scoreteam2) % 2 == 0) {
-                    AllMatchesNREven++;
-                } else {
-                    AllMatchesNROdd++;
-                }
-                if (Scoreteam1 == Scoreteam2) {
-                    AllMatchesNREqual++;
-                }
-                if ((Scoreteam1 + Scoreteam2) % 2 == 1 || Scoreteam1 + Scoreteam2 > 1.5) {
-                    AllMatchesNROddOverOnePointFive++;
-                }
-                if ((Scoreteam1 + Scoreteam2) % 2 == 0 || Scoreteam1 + Scoreteam2 > 2.5) {
-                    AllMatchesNREvenOverTwoPointFive++;
+                if (Scoreteam1 === Scoreteam1) {
+                    // console.log(Scoreteam1 + "-" + Scoreteam2);
+                    AllMatchesNR++;
+                    if ((Scoreteam1 + Scoreteam2) % 2 == 0) {
+                        AllMatchesNREven++;
+                    } else {
+                        AllMatchesNROdd++;
+                    }
+                    if ((Scoreteam1 == Scoreteam2) || (Scoreteam1 == 0 && Scoreteam2 == 0)) {
+                        AllMatchesNREqual++;
+                    }
+                    if (Scoreteam1 == Scoreteam2 || (Scoreteam1 + Scoreteam2) % 2 == 1) {
+                        AllMatchesNREqualAndOdd++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2) % 2 == 1 || Scoreteam1 + Scoreteam2 > 1.5) {
+                        AllMatchesNROddOverOnePointFive++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2) % 2 == 0 || Scoreteam1 + Scoreteam2 > 2.5) {
+                        AllMatchesNREvenOverTwoPointFive++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2) > 2.5) {
+                        AllMatchesNROverTwoPointFive++;
+                    } else {
+                        AllMatchesNRUnderTwoPointFive++;
+                    }
+                    if (Scoreteam1 + Scoreteam2 > 1.5) {
+                        // console.log(Scoreteam1 + " " + Scoreteam2);
+                        AllMatchesNROverOnePointFive++;
+                    } else {
+                        AllMatchesNRUnderOnePointFive++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2) % 2 == 0 && Scoreteam1 + Scoreteam2 > 2.5) {
+                        AllMatchesNREvenAndOverTwoPointFive++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2) % 2 == 1 && Scoreteam1 + Scoreteam2 > 1.5) {
+                        AllMatchesNREOddAndOverOnePointFive++;
+                    }
+                    if (Scoreteam1 > 0 && Scoreteam2 > 0) {
+                        AllMatchesNRInWhichBothTeamScored++;
+                    }
+                    if ((Scoreteam1 == 0 && Scoreteam2 > 1.5) || (Scoreteam2 == 0 && Scoreteam1 > 1.5)) {
+                        AllMatchesNRInWhichJustOneTeamScoresOverOnePointFive++;
+                    }
+                    // if ((Scoreteam1 > 0 && Scoreteam2 > 0||)) {
+                    //     AllMatchesNRInWhichBothTeamScored++;
+                    // }
+                    if (Scoreteam1 == 0 && Scoreteam2 == 0) {
+                        AllMatchesNRInWhichBothTeamsScoredZero++;
+                    }
+                    if ((Scoreteam1 > Scoreteam2) || (Scoreteam1 < Scoreteam2)) {
+                        v[d] = "" + Scoreteam1 + "-" + Scoreteam2 + "";
+                        d++;
+                    }
+                    if ((Scoreteam1 + Scoreteam2 < 1.5) || (Scoreteam1 > 0 || Scoreteam2 < 0)) {
+                        NuInscrieAmbeleEchipeSauSubUnuPunctCinci++;
+
+                    }
+                    // else{
+                    //     d2++;
+                    // }
                 }
             }
         }
@@ -431,8 +824,24 @@ function statisticiMeciuri() {
         console.log("NR TOTAL DE MECIURI PARE " + AllMatchesNREven);
         console.log("NR TOTAL DE MECIURI IMPARE" + AllMatchesNROdd);
         console.log("NR TOTAL DE MECIURI Egale" + AllMatchesNREqual);
+        console.log("NR TOTAL DE MECIURI Egale sau Impare" + AllMatchesNREqualAndOdd);
         console.log("NR TOTAL DE MECIURI Impare sau Peste 1.5 golluri" + AllMatchesNROddOverOnePointFive);
+        console.log("NR TOTAL DE MECIURI Impare si Peste 1.5 golluri" + AllMatchesNREOddAndOverOnePointFive);
         console.log("NR TOTAL DE MECIURI Pare sau Peste 2.5 golluri" + AllMatchesNREvenOverTwoPointFive);
+        console.log("NR TOTAL DE MECIURI Pare si Peste 2.5 golluri" + AllMatchesNREvenAndOverTwoPointFive);
+        console.log("Peste 2.5 golluri" + AllMatchesNROverTwoPointFive);
+        console.log("Peste 1.5 golluri" + AllMatchesNROverOnePointFive);
+        console.log("Sub 1.5 golluri" + AllMatchesNRUnderOnePointFive);
+        console.log("Sub 2.5 golluri" + AllMatchesNRUnderTwoPointFive);
+
+        console.log("NR TOTAL DE MECIURI IN CARE AMBERLE ECHIPE AU MARCAT" + AllMatchesNRInWhichBothTeamScored);
+        console.log("NR TOTAL DE MECIURI IN CARE DOAR O SINGURA ECHIPA MARCHEAZA PESTE UN 1.5 " + AllMatchesNRInWhichJustOneTeamScoresOverOnePointFive);
+        console.log("NR TOTAL DE MECIURI IN CARE Abele Echipe Nu au inscris nici un gol " + AllMatchesNRInWhichBothTeamsScoredZero);
+        console.log("Castiga Echipa 1 sau Echipa 2 " + d + " altfel" + d2);
+        console.log("Ambele echipe nu vor inscrie sau scorul va fii sub 1.5" + NuInscrieAmbeleEchipeSauSubUnuPunctCinci);
+        // v.forEach(element => {
+        //     console.log(element);
+        // });
     });
 }
 
@@ -448,3 +857,27 @@ function show() {
     }
 
 }
+let userItem = localStorage.getItem("User");
+if (userItem) {
+    // console.log("fkldajfkljsdklfajsdklfj alkdfj alksfj kalj")
+    document.querySelector(".hide").style.display = "none";
+    document.querySelector(".hide1").style.display = "none";
+    document.querySelector(".name").onclick = () => {
+        window.location = "http://127.0.0.1:5500/profile.html";
+    }
+    document.querySelector(".name").innerHTML = userItem;
+    document.querySelector(".name").style.cursor = "pointer";
+}
+
+// if (user !== null) {
+//     // The user object has basic properties such as display name, email, etc.
+//     const displayName = user.displayName;
+//     const email = user.email;
+//     const photoURL = user.photoURL;
+//     const emailVerified = user.emailVerified;
+
+//     // The user's ID, unique to the Firebase project. Do NOT use
+//     // this value to authenticate with your backend server, if
+//     // you have one. Use User.getToken() instead.
+//     const uid = user.uid;
+// }

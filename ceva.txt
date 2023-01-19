@@ -1,0 +1,118 @@
+Meci	1	X	2	1X	X2	12
+AC Milan - Tottenham optimi / Tur
+2.13
+3.35
+3.40
+1.30
+1.70
+1.31
+Oferta plus: Meci : AC Milan-Tottenham 
+2.13
+Cota meci
+2.26
+O+4
+2.45
+O+7
+2.72
+O+11
+Cine merge mai departe?
+2.05
+AC Milan
+1.70
+Tottenham
+Victorie fara egal 
+1.53
+AC Milan
+2.42
+Tottenham
+Total goluri / Total goluri asiatice
+10.50
+sub 0.5
+1.04
+peste 0.5
+9.20
+sub 1
+1.05
+peste 1
+3.70
+sub 1.5
+1.27
+peste 1.5
+2.83
+sub 2
+1.42
+peste 2
+1.91
+sub 2.5
+1.87
+peste 2.5
+1.51
+sub 3
+2.53
+peste 3
+1.34
+sub 3.5
+3.20
+peste 3.5
+1.14
+sub 4
+5.40
+peste 4
+1.11
+sub 4.5
+6.30
+peste 4.5
+1.02
+sub 5
+12.00
+peste 5
+1.02
+sub 5.5
+13.00
+peste 5.5
+1.01
+sub 6
+34.00
+peste 6
+1.01
+sub 6.5
+35.00
+peste 6.5
+Ambele echipe marcheaza sau peste goluri in meci
+1.03
+Da 0.5
+1.26
+Da 1.5
+1.47
+Da 2.5
+1.60
+Da 3.5
+1.64
+Da 4.5
+1.66
+Da 5.5
+Total goluri AC Milan
+4.15
+Sub 0.5
+1.19
+Peste 0.5
+1.70
+Sub 1.5
+2.03
+Peste 1.5
+1.17
+Sub 2.5
+4.40
+Peste 2.5
+1.02
+Sub 3.5
+11.00
+Peste 3.5
+
+
+https://lmt.fn.sportradar.com/common/ro/Etc:UTC/gismo/match_odds/37965385
+https://api.sofascore.com/api/v1/event/10888503/team-streaks/betting-odds/202
+https://api.sofascore.com/api/v1/event/10888503/odds/202/all
+
+
+1352378489
