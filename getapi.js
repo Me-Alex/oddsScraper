@@ -418,15 +418,14 @@ let map = [
 ]
 console.log(map);
 let fortunaMatches = [{
-    "europa-conference-league": [{
-        sportRadarUrlAnchor: " ",
-        eFortunaUrl: " "
-    }]
+
 
 }];
 let linkSportRadar = "https://stats.fn.sportradar.com/betano/ro/Europe:Helsinki/gismo/stats_match_get/";
+//scrapes all links of the events from efortuna and then it writes them to the database
 async function showToFrontEndEfortuna() {
     let w1 = "";
+    //s-ar putea sa functioneze doar pe localHOST de revenit aici daca linkurile nu sunt accesibilie
     if (window.location.port) {
         w1 = window.location.hostname + ":" + window.location.port;
     }
@@ -438,63 +437,37 @@ async function showToFrontEndEfortuna() {
     let trueCount = 0;
     let ok = 0;
     async function ceva() {
-        for (let index1 = 0; index1 < 1; index1++) {
+        for (let index1 = 0; index1 < map.length; index1++) {
             // console.log(index1);
             console.log(map[index1]);
             let el1 = map[index1];
             let el = baseUrl + map[index1];
             console.log(el);
-            fortunaMatches[el1] = [{
-                sportRadarUrlAnchor: " ",
-                eFortunaUrl: " "
-            }];
-
             const fortunaDataFetch = await fetchUrlText(el);
             var parser = new DOMParser();
             var xmlDoc = parser.parseFromString(fortunaDataFetch, "text/html");
-            console.log(fortunaDataFetch);
             var matchDataContainer = xmlDoc.querySelectorAll(".link-event-icon.text-middle");
             var matchDataContainer1 = xmlDoc.querySelectorAll('.event-link.js-event-link');
             // var time = xmlDoc.querySelectorAll('.event-datetime');
-            // if (index1 == 120) {
-            //     console.log("program finished");
-            //     writeToDb();
-            // }
-            console.log(matchDataContainer);
+
             for (let j = 0; j < matchDataContainer.length; j++) {
-                let sID = await fetchUrl1(matchDataContainer[j].href, options1);
-                // console.log(fortunaMatches.length + " " + trueCount);
+                if (matchDataContainer1[j]) {
+                    let sID = await fetchUrl1(matchDataContainer[j].href, options1);
+                    // console.log(fortunaMatches.length + " " + trueCount);
 
-                fortunaMatches[el1][fortunaMatches[el1].length++] = {
+                    fortunaMatches[fortunaMatches.length++ - 1] = {
 
-                    sportRadarUrlAnchor: matchDataContainer[j].href,
-                    eFortunaUrl: baseUrl1 + matchDataContainer1[j].href.split(w1)[1]
+                        sportRadarUrlAnchor: matchDataContainer[j].href,
+                        eFortunaUrl: (baseUrl1 + matchDataContainer1[j].href.split(w1)[1]) ?? 'none',
+                        sportRadarUrl: sID,
+                        sportRadarID: sID.split('match/')[1] || sID.split('ro/')[1]
 
+                    }
                 }
-
-                // console.log(matchDataContainer[j].href + "\n" + baseUrl1 + matchDataContainer1[j].href.split(w1)[1] + "\n" + sID);
-                // console.log(sID);
-
-                // for (let i = fortunaMatches.length - 1; i >= 0; i--) {
-                //     if (matchDataContainer[j].href == fortunaMatches[el1][i].sportRadarUrlAnchor) {
-                //         ok = 1;
-                //         console.log("aici" + i);
-                //         continue;
-                //     }
-                //     if (i == 0 && ok == 0) {
-                //         console.log(i);
-                //         fortunaMatches[el1][fortunaMatches[el1].length++] = {
-
-                //             sportRadarUrlAnchor: matchDataContainer[j].href,
-                //             eFortunaUrl: baseUrl1 + matchDataContainer1[j].href.split(w1)[1]
-
-                //         }
-
-                //     }
-                //     ok = 0;
-                // }
-
-
+            }
+            if (index1 == 120) {
+                console.log("program finished");
+                writeToDb();
             }
 
         }
@@ -504,12 +477,73 @@ async function showToFrontEndEfortuna() {
     ceva();
     async function writeToDb() {
         fortunaMatches.forEach((match, index) => {
-            writeToDbNoModular('meciuri-eFortunaWithIdv3/' + match.sportRadarID + '/', match);
+            writeToDbNoModular('meciuri-eFortunaWithIdv4/' + match.sportRadarID + '/', match);
         });
     }
 
 }
+async function checkEventsStartTime() {
+    firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap) => {
+        let values = snap.val();
+        for (const [key, value] of Object.entries(values)) {
+            // console.log(valuesBetano[keyB]);
+            let timeFromApi = linkSportRadar + key;
+            let result = await fetchUrlJson(timeFromApi);
+            if (result.doc[0] && result.doc[0].data.time) {
+                let resultDate = result.doc[0].data.time.date;
+                let date = new Date(parseInt(resultDate.split('-')[0]), parseInt(resultDate.split('-')[1]), parseInt(resultDate.split('-')[2]), parseInt(result.doc[0].data.time.time.split(':')[0]), parseInt(result.doc[0].data.time.time.split(':')[1]));
+                let DateTIme = new Date(result.doc[0].data.time.time);
+                let d = new Date;
+                // console.log(resultDate.split('-'));
+                // console.log(date.getFullYear());
+                // console.log(date.getMonth());
+                // console.log(date.getDate());
+                // console.log(date.getHours());
+                // console.log(date.getMinutes());
+                // console.log(result.doc[0].data.time.date + " " + result.doc[0].data.time.time);
+                if (compareDates(date) == false) {
+                    console.log(values[key].eFortunaUrl);
 
+                }
+
+            }
+        }
+    });
+}
+function compareDates(d2) {
+    let date = new Date;
+    if (date.getFullYear() <= d2.getFullYear() && date.getMonth() <= d2.getMonth() && date.getDate() <= d2.getDate() && date.getHours() <= d2.getHours() && date.getMinutes() <= d2.getMinutes())
+        return true;
+    return false;
+
+}
+
+//cauta meciurile care sunt disponibilie si pe fortuna si pe betano
+function compareBetanoWithFortunaMatches() {
+    firebase.database().ref('meciuri-BetanoWithId').on('value', async (snap) => {
+        let valuesBetano = snap.val();
+        console.log(valuesBetano);
+        // let sizeBetano = snap.size();
+        firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap1) => {
+            let valuesFortuna = snap1.val();
+            console.log(valuesFortuna);
+
+            // let sizeFortuna = snap.size();
+            for (const [keyB, valueB] of Object.entries(valuesBetano)) {
+                // console.log(valuesBetano[keyB]);
+                if (valuesFortuna[keyB] != null) {
+                    console.log(valuesBetano[keyB]);
+                    console.log(valuesFortuna[keyB]);
+
+                }
+            }
+
+
+
+        });
+
+    });
+}
 async function showToFrontEnd() {
     var theUrl = "https://api.efortuna.ro/live3/api/live/matches/overview";
     let urlBetano = "https://ro.betano.com/api/sport/fotbal/meciurile-urmatoare-de-azi/";
@@ -616,7 +650,7 @@ async function showToFrontEndEsportsBattleMatthes() {
 
 }
 
-
+//Alex from future very readable code ngl , idc if it works :)))
 function writeMatchesToDB() {
     for (let ii = 0; ii < ddata.data1.length; ii++) {
         var event = ddata.data1[ii].data.event.markets[0];
@@ -868,6 +902,18 @@ if (userItem) {
     document.querySelector(".name").innerHTML = userItem;
     document.querySelector(".name").style.cursor = "pointer";
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // if (user !== null) {
 //     // The user object has basic properties such as display name, email, etc.
