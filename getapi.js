@@ -482,33 +482,184 @@ async function showToFrontEndEfortuna() {
     }
 
 }
+let allMarkets = [{
+
+}]
+let markets = [{
+
+}]
+let matchOdds = {
+
+    id: 'dsadasd ',
+    markets: [{
+        marketName: 'fgsgsfd',
+        allMarkets: [{
+            name: '',
+            oddValue: '',
+            oddName: ''
+        }]
+    }]
+
+};
+console.log(matchOdds);
+let counterMarkets = 0;
+let counter = 0;
+let allMarketsCounter = 0;
 async function checkEventsStartTime() {
     firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap) => {
         let values = snap.val();
         for (const [key, value] of Object.entries(values)) {
-            // console.log(valuesBetano[keyB]);
             let timeFromApi = linkSportRadar + key;
             let result = await fetchUrlJson(timeFromApi);
+            //este in secunde si am transformat in ms cu *1000
             if (result.doc[0] && result.doc[0].data.time) {
-                let resultDate = result.doc[0].data.time.date;
-                let date = new Date(parseInt(resultDate.split('-')[0]), parseInt(resultDate.split('-')[1]), parseInt(resultDate.split('-')[2]), parseInt(result.doc[0].data.time.time.split(':')[0]), parseInt(result.doc[0].data.time.time.split(':')[1]));
-                let DateTIme = new Date(result.doc[0].data.time.time);
-                let d = new Date;
-                // console.log(resultDate.split('-'));
-                // console.log(date.getFullYear());
-                // console.log(date.getMonth());
-                // console.log(date.getDate());
-                // console.log(date.getHours());
-                // console.log(date.getMinutes());
-                // console.log(result.doc[0].data.time.date + " " + result.doc[0].data.time.time);
-                if (compareDates(date) == false) {
+                if ((new Date(result.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60 > 0) {
                     console.log(values[key].eFortunaUrl);
-
+                    // console.log((new Date(result.doc[0].data.time.uts - Date.now())) / 1000 / 60);
+                    // console.log(Date.now() + " " + result.doc[0].data.time.uts);
+                    scrapeFortunaMatchOdds(values[key].eFortunaUrl, values[key].sportRadarID);
                 }
-
             }
         }
     });
+}
+// te rog nu ma injura daca citesti codul asta dupa 1 saptamana 
+async function scrapeFortunaMatchOdds(url, ID) {
+
+    const fortunaDataFetch = await fetchUrlText(url);
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(fortunaDataFetch, "text/html");
+    var matchDataContainer = xmlDoc.body;
+    let allMarketH3 = matchDataContainer.querySelectorAll(".market h3");
+    // console.log(matchOdds);
+    //document.querySelector(
+    let mapOdds = {
+        home: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(2) > a > span',
+        away: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(4) > a > span',
+        draw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(3) > a > span',
+        homeOrDraw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(5) > a > span',
+        drawOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(6) > a > span',
+        homeOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(7) > a > span'
+    }
+    //document.querySelectorAll(".market h3")
+    let mapMarkets = [
+        ' Pauza sau final pariaza pe rezultatul primei reprize sau rezultatul final (daca meciul nu este finalizat, pariurile vor fi anulate) ',
+        ' Victorie fara egal pariaza pe victoria echipei gazda sau oaspete, in caz de egalitate pariurile sunt nule ',
+        ' Total goluri / Total goluri asiatice ',
+        ' Ambele echipe marcheaza sau peste goluri in meci ',
+        ' Ambele marcheaza ',
+        ' Handicap / Handicap asiatic ',
+        ' Prima repriza ',
+        ' Pauza/final pariaza pe rezultatul primei reprize si rezultatul final al meciului ',
+        ' Meci: Par/ Impar ',
+        {
+            home: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(2) > a > span',
+            away: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(4) > a > span',
+            draw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(3) > a > span',
+            homeOrDraw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(5) > a > span',
+            drawOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(6) > a > span',
+            homeOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(7) > a > span'
+        }
+    ];
+    //nici nu ai idee cat de rau imi pare ca te pun sa citesti ...si mai rau sa intelegi codul acesta 
+    //tot ce trebuie sa stii ca este eficient si isi face treaba , preia tote cotele de pe fortuna -> Alex din trecut 
+    //you're a genius
+    //get a bike tough
+    // console.log(mapMarkets);
+    let mapMarkets1 = {
+        breakOrOver: 'Pauza sau final',
+        drawNoBet: 'Victorie fara egal',
+        overUnder: 'Total goluri / Total goluri asiatice',
+        bothScoreOrOver: 'Ambele echipe marcheaza sau peste goluri in meci',
+        bothScore: 'Ambele marcheaza',
+        asianHandicap: 'Handicap / Handicap asiatic',
+        firstRound: 'Prima repriza',
+        pauzaFinal: 'Pauza/final',
+        oddEven: 'Meci: Par/ Impar',
+    }
+    for (let index = 0; index < allMarketH3.length; index++) {
+        mapMarkets.forEach((el, index1) => {
+            if (el == allMarketH3[index].innerText.replace(/\s{2,}/g, ' ')) {
+                let oddsGroup = allMarketH3[index].nextElementSibling.querySelectorAll('.odds-group a');
+                for (let indexOdds = 0; indexOdds < oddsGroup.length; indexOdds++) {
+                    let oddValue = oddsGroup[indexOdds].querySelector('.odds-value').textContent;
+                    let oddName = oddsGroup[indexOdds].querySelector('.odds-name').outerText.split('\n')[0];
+                    allMarkets[indexOdds] = {
+                        oddValue: oddValue,
+                        oddName: oddName
+                    }
+                }
+                if (index1 == 0)
+                    markets[index1] = {
+                        marketName: ' Pauza sau final ',
+                        allMarkets
+                    }
+                else if (index1 == 1)
+                    markets[index1] = {
+                        marketName: ' Victorie fara egal ',
+                        allMarkets
+                    }
+                else if (index1 == 7)
+                    markets[index1] = {
+                        marketName: ' Pauza/final ',
+                        allMarkets
+                    }
+                else
+                    markets[index1] = {
+                        marketName: el,
+                        allMarkets
+                    }
+                allMarkets = [];
+
+            }
+            if (index1 == 9) {
+                let doc = xmlDoc.body.querySelector(mapMarkets[9].home).innerText;
+                let doc1 = matchDataContainer.querySelector(mapMarkets[9].away).innerText;
+                let doc2 = matchDataContainer.querySelector(mapMarkets[9].draw).innerText;
+                allMarkets = [];
+                markets[index1] = {
+                    marketName: '1X2',
+                    allMarkets: [{ oddValue: doc, oddName: 'Home' }, { oddValue: doc1, oddName: 'Away' }, { oddValue: doc2, oddName: 'Draw' }]
+                }
+                doc = matchDataContainer.querySelector(mapMarkets[9].homeOrDraw).innerText;
+                doc1 = matchDataContainer.querySelector(mapMarkets[9].drawOrAway).innerText;
+                doc2 = matchDataContainer.querySelector(mapMarkets[9].homeOrAway).innerText;
+                allMarkets = [];
+                markets[index1 + 1] = {
+                    marketName: '1X-X2-12',
+                    allMarkets: [{ oddValue: doc, oddName: '1X' }, { oddValue: doc1, oddName: 'X2' }, { oddValue: doc2, oddName: '12' }]
+                }
+
+            }
+        })
+
+
+    }
+    matchOdds = {
+        id: ID,
+        markets
+    }
+
+    markets = [];
+    var updates = {};
+    updates['/meciuri-eFortunaWithIdv4/' + ID + '/' + "matchOdds"] = matchOdds;
+    firebase.database().ref().update(updates);
+    console.log(matchOdds);
+    matchOdds = {};
+    //scriu catre baza de date
+    // firebase.database().ref("meciuri-eFortunaWithIdv4/" + ID + "/").set({
+    //     matchOdds, "ceva": "alune"
+    // }
+    //     , function (error) {
+    //         if (error) {
+    //             // The write failed...
+    //             console.log({ error });
+    //         } else {
+    //             console.log("success");
+    //             // Data saved successfully!
+    //         }
+    //     });
+    return matchOdds;
 }
 function compareDates(d2) {
     let date = new Date;
@@ -517,30 +668,54 @@ function compareDates(d2) {
     return false;
 
 }
+async function verifyEventStartingTime(key) { //key prin referinta este ID ul evenimentului 
+    let timeFromApi = linkSportRadar + key;
+    let result = await fetchUrlJson(timeFromApi);//este in secunde si am transformat in ms cu *1000
+    if (result.doc[0] && result.doc[0].data.time) {
+        if ((new Date(result.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60 > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+function checkIfEventHasMarkets(match) {
+    if (match.matchOdds) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
-//cauta meciurile care sunt disponibilie si pe fortuna si pe betano
-function compareBetanoWithFortunaMatches() {
+function compareBetanoWithFortunaMatches() {//cauta meciurile care sunt disponibilie si pe fortuna si pe betano
+    let counter = 0;
     firebase.database().ref('meciuri-BetanoWithId').on('value', async (snap) => {
-        let valuesBetano = snap.val();
-        console.log(valuesBetano);
-        // let sizeBetano = snap.size();
+        let valuesBetano = snap.val(); // console.log(valuesBetano); let sizeBetano = snap.size();
         firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap1) => {
             let valuesFortuna = snap1.val();
-            console.log(valuesFortuna);
-
-            // let sizeFortuna = snap.size();
-            for (const [keyB, valueB] of Object.entries(valuesBetano)) {
-                // console.log(valuesBetano[keyB]);
+            console.log(valuesFortuna); // let sizeFortuna = snap.size();
+            for (const [keyB, valueB] of Object.entries(valuesBetano)) {  // console.log(valuesBetano[keyB]);
                 if (valuesFortuna[keyB] != null) {
-                    console.log(valuesBetano[keyB]);
-                    console.log(valuesFortuna[keyB]);
+                    if (verifyEventStartingTime(keyB)) {
+                        console.log(valuesFortuna[keyB]);
+                        console.log(valuesBetano[keyB]);
+
+                        if (checkIfEventHasMarkets(valuesFortuna[keyB])) {
+                            console.log("exita");
+                        } else {
+                            console.log("nu exista");
+                            scrapeFortunaMatchOdds(valuesFortuna[keyB].eFortunaUrl, valuesFortuna[keyB].sportRadarID);
+                        }
+                        counter++;
+                    }
 
                 }
             }
 
+            console.log(counter + "acesta este numarul de evenimente");
 
 
         });
+
 
     });
 }
@@ -698,7 +873,7 @@ function writeScoreMatchesToDB(link) {
     console.log("minic");
 }
 function removeMatches() {
-    var data = firebase.database().ref("meciuri-eFortunaWithIdv3");
+    var data = firebase.database().ref("meciuri-eFortunaWithIdv4");
     data.remove().then(() => { console.log("location removed"); });
 }
 
