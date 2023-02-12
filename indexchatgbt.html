@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sports Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #F2F2F2;
+        }
+
+        .odds-card {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 80%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+
+        .odds-card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .team-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .team-record {
+            font-style: italic;
+            margin-bottom: 10px;
+            color: gray;
+        }
+
+        .odds {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .bet-type {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: gray;
+        }
+
+        .bet-button {
+            background-color: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .bet-button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="margin-top: 20px;">Sports Betting Odds</h1>
+    <div class="odds-card">
+        <div class="team-name">
+            <h3>Team A vs Team B</h3>
+        </div>
+        <div class="team-record">
+            <p>Record: 10-5</p>
+        </div>
+        <div class="odds">
+            <div>
+                <p class="bet-type">Moneyline</p>
+                <p>Team A: +120</p>
+                <p>Team B: -130</p>
+            </div>
+            <div>
+                <p class="bet-type">Spread</p>
+                <p>Team A +1.5: -110</p>
+                <p>Team B -1.5: -110</p>
+            </div>
+            <div>
+                <p class="bet-type">Total</p>
+                <p>Over: +100</p>
+                <p>Under: -120</p>
+            </div>
+        </div>
+        <button class="bet-button">Place Bet</button>
+    </div>
+</body>
+
+</html>

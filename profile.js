@@ -28,16 +28,16 @@ import {
 
 // TODO: Add SDKs for Firebase products that you want to use https://firebase.google.com/docs/web/setup#available-libraries
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAYL7vd3pD0lOLRi79TfB60pqGBxaf7RCQ",
-    authDomain: "football-1a983.firebaseapp.com",
-    databaseURL: "https://football-1a983-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "football-1a983",
-    storageBucket: "football-1a983.appspot.com",
-    messagingSenderId: "444728787060",
-    appId: "1:444728787060:web:9dbbe5e62523794cb55121",
-    measurementId: "G-WSRYK9XJFV"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhrsqEIJz2knA2Lf7uB57J9SaaBDPOf-o",
+    authDomain: "football2-78423.firebaseapp.com",
+    databaseURL: "https://football2-78423-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "football2-78423",
+    storageBucket: "football2-78423.appspot.com",
+    messagingSenderId: "837207657626",
+    appId: "1:837207657626:web:ec7218ef14b394afc22323",
+    measurementId: "G-89H01QQJW1"
+  };
 
 // Initialize Firebase
 var app = initializeApp(firebaseConfig);

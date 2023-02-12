@@ -10,6 +10,239 @@
 </head>
 
 <body>
+
+    <div class="odds-card">
+        <div class="team-name">
+            <h3>Team A</h3>
+        </div>
+        <div class="odds">
+            <p>1.67</p>
+        </div>
+        <div class="bet-button">
+            <button>Bet</button>
+        </div>
+    </div>
+
+    <style>
+        .odds-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 200px;
+            padding: 10px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .team-name {
+            flex-basis: 60%;
+            text-align: center;
+        }
+
+        .odds {
+            flex-basis: 20%;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .bet-button {
+            flex-basis: 20%;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: lightgreen;
+        }
+    </style>
+    <div class="odds-card">
+        <div class="team-name">
+            <h3>Team A</h3>
+            <p class="team-record">Record: 20-5</p>
+        </div>
+        <div class="odds">
+            <p class="moneyline-odds">1.67</p>
+            <p class="spread-odds">-7.5 (-110)</p>
+            <p class="total-odds">Over 153.5 (-110)</p>
+        </div>
+        <div class="bet-button">
+            <button>Bet</button>
+        </div>
+    </div>
+
+    <style>
+        .odds-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .team-name {
+            flex-basis: 60%;
+            text-align: center;
+        }
+
+        .team-record {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .odds {
+            flex-basis: 20%;
+            text-align: center;
+        }
+
+        .moneyline-odds {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .spread-odds,
+        .total-odds {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .bet-button {
+            flex-basis: 20%;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: lightgreen;
+        }
+    </style>
+
+    <div class="odds-card-container">
+        <div class="odds-card">
+            <div class="team-name">
+                <h3>Team A</h3>
+                <p class="team-record">Record: 20-5</p>
+            </div>
+            <div class="odds">
+                <p class="moneyline-odds">1.67</p>
+                <p class="spread-odds">-7.5 (-110)</p>
+                <p class="total-odds">Over 153.5 (-110)</p>
+            </div>
+            <div class="bet-button">
+                <button>Bet</button>
+            </div>
+        </div>
+
+        <div class="odds-card">
+            <div class="team-name">
+                <h3>Team B</h3>
+                <p class="team-record">Record: 15-10</p>
+            </div>
+            <div class="odds">
+                <p class="moneyline-odds">2.50</p>
+                <p class="spread-odds">+7.5 (-110)</p>
+                <p class="total-odds">Under 153.5 (-110)</p>
+            </div>
+            <div class="bet-button">
+                <button>Bet</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .odds-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+        .odds-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid gray;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+
+        .team-name {
+            flex-basis: 60%;
+            text-align: center;
+        }
+
+        .team-record {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .odds {
+            flex-basis: 20%;
+            text-align: center;
+        }
+
+        .moneyline-odds {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .spread-odds,
+        .total-odds {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        .bet-button {
+            flex-basis: 20%;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+    <!-- 
     <div class="container">
         <h1>Bett website </h1>
         <div class="colums">
@@ -22,7 +255,7 @@
             <div class="col">
                 <p>2(Ehipa2) -</p><span>null</span>
             </div>
-            <!-- <div class="col"></div> -->
+            <div class="col"></div>
         </div>
         <div class="colums">
             <div class="col">
@@ -34,13 +267,13 @@
             <div class="col">
                 <p>2(Ehipa2 niciun pariu pe egal) -</p><span>null</span>
             </div>
-            <!-- <div class="col"></div> -->
         </div>
         <a class="pariaza-aici" target="_blank" href="">Pariaza aici</a>
 
-    </div>
+    </div>  -->
 
-   
+
 </body>
-<script  src="getapi.js"></script>
+<script src="getapi.js"></script>
+
 </html>

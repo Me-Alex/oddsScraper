@@ -1,31 +1,50 @@
-.row{
-    display:flex;
-    gap:20px;
+.roww {
+    display: flex;
+    gap: 20px;
 }
-body{
+
+body {
     width: 100%;
 }
-.matchOdds{
+
+.home, .away, .equal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.matchOdds {
     width: fit-content;
     margin: 0 auto;
 }
-.mactchPrimaryResults{
-    display: flex;
-    width:442px;
-    justify-content: center;
 
-    gap:10px;
+.mactchPrimaryResults {
+    display: flex;
+    width: 442px;
+    justify-content: center;
+    height: 50px;
+    gap: 10px;
 }
-.mactchPrimaryResults *{
+
+.mactchPrimaryResults * {
     padding: 0 5px 0 5px;
-    width:100%;
+    width: 100%;
     background-color: black;
-    color:white;
+    color: white;
 }
-.teamOdds{
-    color:yellow;
+
+.teamOdds {
+    color: yellow;
     text-align: right;
+    margin: 0 auto;
 }
-.margin-down-2px{
-    margin:0 0 2px 0;
+
+.resultName {
+    margin: 0 auto;
+
+}
+
+.margin-down-2px {
+    margin: 0 0 2px 0;
 }

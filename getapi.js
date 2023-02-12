@@ -477,7 +477,7 @@ async function showToFrontEndEfortuna() {
     ceva();
     async function writeToDb() {
         fortunaMatches.forEach((match, index) => {
-            writeToDbNoModular('meciuri-eFortunaWithIdv4/' + match.sportRadarID + '/', match);
+            writeToDbNoModular('meciuri-eFortunaWithIdv5/' + match.sportRadarID + '/', match);
         });
     }
 
@@ -506,53 +506,46 @@ let counterMarkets = 0;
 let counter = 0;
 let allMarketsCounter = 0;
 async function checkEventsStartTime() {
-    firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap) => {
+    firebase.database().ref('meciuri-eFortunaWithIdv5').get().then(async (snap) => {
         let values = snap.val();
-        for (const [key, value] of Object.entries(values)) {
-            let timeFromApi = linkSportRadar + key;
+        let key = Object.keys(values)
+        console.log(key.length + " lungimea");
+        for (index = 0; index < key.length; index++) {
+            let timeFromApi = linkSportRadar + key[index];
             let result = await fetchUrlJson(timeFromApi);
+            console.log(index + " index");
             //este in secunde si am transformat in ms cu *1000
             if (result.doc[0] && result.doc[0].data.time) {
                 if ((new Date(result.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60 > 0) {
-                    console.log(values[key].eFortunaUrl);
+                    console.log(values[key[index]].eFortunaUrl);
                     // console.log((new Date(result.doc[0].data.time.uts - Date.now())) / 1000 / 60);
                     // console.log(Date.now() + " " + result.doc[0].data.time.uts);
-                    scrapeFortunaMatchOdds(values[key].eFortunaUrl, values[key].sportRadarID);
+                    scrapeFortunaMatchOdds(values[key[index]].eFortunaUrl, values[key[index]].sportRadarID);
                 }
             }
         }
     });
+
 }
 // te rog nu ma injura daca citesti codul asta dupa 1 saptamana 
 async function scrapeFortunaMatchOdds(url, ID) {
 
-    const fortunaDataFetch = await fetchUrlText(url);
-    var parser = new DOMParser();
-    var xmlDoc = parser.parseFromString(fortunaDataFetch, "text/html");
-    var matchDataContainer = xmlDoc.body;
-    let allMarketH3 = matchDataContainer.querySelectorAll(".market h3");
-    // console.log(matchOdds);
-    //document.querySelector(
-    let mapOdds = {
-        home: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(2) > a > span',
-        away: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(4) > a > span',
-        draw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(3) > a > span',
-        homeOrDraw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(5) > a > span',
-        drawOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(6) > a > span',
-        homeOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(7) > a > span'
-    }
-    //document.querySelectorAll(".market h3")
-    let mapMarkets = [
-        ' Pauza sau final pariaza pe rezultatul primei reprize sau rezultatul final (daca meciul nu este finalizat, pariurile vor fi anulate) ',
-        ' Victorie fara egal pariaza pe victoria echipei gazda sau oaspete, in caz de egalitate pariurile sunt nule ',
-        ' Total goluri / Total goluri asiatice ',
-        ' Ambele echipe marcheaza sau peste goluri in meci ',
-        ' Ambele marcheaza ',
-        ' Handicap / Handicap asiatic ',
-        ' Prima repriza ',
-        ' Pauza/final pariaza pe rezultatul primei reprize si rezultatul final al meciului ',
-        ' Meci: Par/ Impar ',
-        {
+    if (url.split('m.')[0] == 'http://') {//poti sa inlaturi if statement-ul am verificat eu o chestie  
+        console.log(url.split('//')[1]);
+        console.log(url);
+        url = url.split('m.e')[0] + url.split('m.e')[1];
+        console.log(url);
+        // scrapeFortunaMatchOdds(url,ID);
+    } else {
+        console.log(url);
+        const fortunaDataFetch = await fetchUrlText(url);
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(fortunaDataFetch, "text/html");
+        var matchDataContainer = xmlDoc.body;
+        let allMarketH3 = matchDataContainer.querySelectorAll(".market h3");
+        // console.log(matchOdds);
+        //document.querySelector(
+        let mapOdds = {
             home: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(2) > a > span',
             away: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(4) > a > span',
             draw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(3) > a > span',
@@ -560,106 +553,120 @@ async function scrapeFortunaMatchOdds(url, ID) {
             drawOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(6) > a > span',
             homeOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(7) > a > span'
         }
-    ];
-    //nici nu ai idee cat de rau imi pare ca te pun sa citesti ...si mai rau sa intelegi codul acesta 
-    //tot ce trebuie sa stii ca este eficient si isi face treaba , preia tote cotele de pe fortuna -> Alex din trecut 
-    //you're a genius
-    //get a bike tough
-    // console.log(mapMarkets);
-    let mapMarkets1 = {
-        breakOrOver: 'Pauza sau final',
-        drawNoBet: 'Victorie fara egal',
-        overUnder: 'Total goluri / Total goluri asiatice',
-        bothScoreOrOver: 'Ambele echipe marcheaza sau peste goluri in meci',
-        bothScore: 'Ambele marcheaza',
-        asianHandicap: 'Handicap / Handicap asiatic',
-        firstRound: 'Prima repriza',
-        pauzaFinal: 'Pauza/final',
-        oddEven: 'Meci: Par/ Impar',
-    }
-    for (let index = 0; index < allMarketH3.length; index++) {
-        mapMarkets.forEach((el, index1) => {
-            if (el == allMarketH3[index].innerText.replace(/\s{2,}/g, ' ')) {
-                let oddsGroup = allMarketH3[index].nextElementSibling.querySelectorAll('.odds-group a');
-                for (let indexOdds = 0; indexOdds < oddsGroup.length; indexOdds++) {
-                    let oddValue = oddsGroup[indexOdds].querySelector('.odds-value').textContent;
-                    let oddName = oddsGroup[indexOdds].querySelector('.odds-name').outerText.split('\n')[0];
-                    allMarkets[indexOdds] = {
-                        oddValue: oddValue,
-                        oddName: oddName
-                    }
-                }
-                if (index1 == 0)
-                    markets[index1] = {
-                        marketName: ' Pauza sau final ',
-                        allMarkets
-                    }
-                else if (index1 == 1)
-                    markets[index1] = {
-                        marketName: ' Victorie fara egal ',
-                        allMarkets
-                    }
-                else if (index1 == 7)
-                    markets[index1] = {
-                        marketName: ' Pauza/final ',
-                        allMarkets
-                    }
-                else
-                    markets[index1] = {
-                        marketName: el,
-                        allMarkets
-                    }
-                allMarkets = [];
-
+        //document.querySelectorAll(".market h3")
+        let mapMarkets = [
+            ' Pauza sau final pariaza pe rezultatul primei reprize sau rezultatul final (daca meciul nu este finalizat, pariurile vor fi anulate) ',
+            ' Victorie fara egal pariaza pe victoria echipei gazda sau oaspete, in caz de egalitate pariurile sunt nule ',
+            ' Total goluri / Total goluri asiatice ',
+            ' Ambele echipe marcheaza sau peste goluri in meci ',
+            ' Ambele marcheaza ',
+            ' Handicap / Handicap asiatic ',
+            ' Prima repriza ',
+            ' Pauza/final pariaza pe rezultatul primei reprize si rezultatul final al meciului ',
+            ' Meci: Par/ Impar ',
+            {
+                home: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(2) > a > span',
+                away: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(4) > a > span',
+                draw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(3) > a > span',
+                homeOrDraw: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(5) > a > span',
+                drawOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(6) > a > span',
+                homeOrAway: 'div.events-table-box.events-table-box--main-market > table > tbody > tr > td:nth-child(7) > a > span'
             }
-            if (index1 == 9) {
-                let doc = xmlDoc.body.querySelector(mapMarkets[9].home).innerText;
-                let doc1 = matchDataContainer.querySelector(mapMarkets[9].away).innerText;
-                let doc2 = matchDataContainer.querySelector(mapMarkets[9].draw).innerText;
-                allMarkets = [];
-                markets[index1] = {
-                    marketName: '1X2',
-                    allMarkets: [{ oddValue: doc, oddName: 'Home' }, { oddValue: doc1, oddName: 'Away' }, { oddValue: doc2, oddName: 'Draw' }]
+        ];
+        //nici nu ai idee cat de rau imi pare ca te pun sa citesti ...si mai rau sa intelegi codul acesta 
+        //tot ce trebuie sa stii ca este eficient si isi face treaba , preia tote cotele de pe fortuna -> Alex din trecut 
+        //you're a genius
+        //get a bike tough
+        // console.log(mapMarkets);
+        let mapMarkets1 = {
+            breakOrOver: 'Pauza sau final',
+            drawNoBet: 'Victorie fara egal',
+            overUnder: 'Total goluri / Total goluri asiatice',
+            bothScoreOrOver: 'Ambele echipe marcheaza sau peste goluri in meci',
+            bothScore: 'Ambele marcheaza',
+            asianHandicap: 'Handicap / Handicap asiatic',
+            firstRound: 'Prima repriza',
+            pauzaFinal: 'Pauza/final',
+            oddEven: 'Meci: Par/ Impar',
+        }
+        for (let index = 0; index < allMarketH3.length; index++) {
+            mapMarkets.forEach((el, index1) => {
+                if (el == allMarketH3[index].innerText.replace(/\s{2,}/g, ' ')) {
+                    let oddsGroup = allMarketH3[index].nextElementSibling.querySelectorAll('.odds-group a');
+                    for (let indexOdds = 0; indexOdds < oddsGroup.length; indexOdds++) {
+                        let oddValue = oddsGroup[indexOdds].querySelector('.odds-value').textContent;
+                        let oddName = oddsGroup[indexOdds].querySelector('.odds-name').outerText.split('\n')[0];
+                        allMarkets[indexOdds] = {
+                            oddValue: oddValue,
+                            oddName: oddName
+                        }
+                    }
+                    if (index1 == 0)
+                        markets[index1] = {
+                            marketName: ' Pauza sau final ',
+                            allMarkets
+                        }
+                    else if (index1 == 1)
+                        markets[index1] = {
+                            marketName: ' Victorie fara egal ',
+                            allMarkets
+                        }
+                    else if (index1 == 7)
+                        markets[index1] = {
+                            marketName: ' Pauza/final ',
+                            allMarkets
+                        }
+                    else
+                        markets[index1] = {
+                            marketName: el,
+                            allMarkets
+                        }
+                    allMarkets = [];
+
                 }
-                doc = matchDataContainer.querySelector(mapMarkets[9].homeOrDraw).innerText;
-                doc1 = matchDataContainer.querySelector(mapMarkets[9].drawOrAway).innerText;
-                doc2 = matchDataContainer.querySelector(mapMarkets[9].homeOrAway).innerText;
-                allMarkets = [];
-                markets[index1 + 1] = {
-                    marketName: '1X-X2-12',
-                    allMarkets: [{ oddValue: doc, oddName: '1X' }, { oddValue: doc1, oddName: 'X2' }, { oddValue: doc2, oddName: '12' }]
+                if (index1 == 9) {
+                    let doc = xmlDoc.body.querySelector(mapMarkets[9].home).innerText;
+                    let doc1 = matchDataContainer.querySelector(mapMarkets[9].away).innerText;
+                    let doc2 = matchDataContainer.querySelector(mapMarkets[9].draw).innerText;
+                    allMarkets = [];
+                    markets[index1] = {
+                        marketName: '1X2',
+                        allMarkets: [{ oddValue: doc, oddName: 'Home' }, { oddValue: doc1, oddName: 'Away' }, { oddValue: doc2, oddName: 'Draw' }]
+                    }
+                    doc = matchDataContainer.querySelector(mapMarkets[9].homeOrDraw).innerText;
+                    doc1 = matchDataContainer.querySelector(mapMarkets[9].drawOrAway).innerText;
+                    doc2 = matchDataContainer.querySelector(mapMarkets[9].homeOrAway).innerText;
+                    allMarkets = [];
+                    markets[index1 + 1] = {
+                        marketName: '1X-X2-12',
+                        allMarkets: [{ oddValue: doc, oddName: '1X' }, { oddValue: doc1, oddName: 'X2' }, { oddValue: doc2, oddName: '12' }]
+                    }
+
                 }
-
-            }
-        })
+            })
 
 
+        }
+        matchOdds = {
+            id: ID,
+            markets
+        }
+
+        markets = [];
+
+        var updates = {};
+        if (matchOdds.markets[0]) {//daca a gasit markets le urcam catre baza de date 
+            updates['meciuri-eFortunaWithIdv5/' + ID + '/' + "matchOdds"] = matchOdds;
+            firebase.database().ref().update(updates);
+            console.log(matchOdds);
+        }
+        // else {//daca nu a gasit markets stergem evenimentul din baza de date
+
+        //     firebase.database().ref('meciuri-eFortunaWithIdv5/' + ID).remove().then(() => { console.log('evenimentul a fost eliminat pentru ca evenimentul nu mai exista' + ID) })
+        // }//posibil sa existe in viitor o eroare referitor ca evenimentul nu a existat niciodata in baza de date ::::POSIBILITATE::::
+        matchOdds = {};
+        return matchOdds;
     }
-    matchOdds = {
-        id: ID,
-        markets
-    }
-
-    markets = [];
-    var updates = {};
-    updates['/meciuri-eFortunaWithIdv4/' + ID + '/' + "matchOdds"] = matchOdds;
-    firebase.database().ref().update(updates);
-    console.log(matchOdds);
-    matchOdds = {};
-    //scriu catre baza de date
-    // firebase.database().ref("meciuri-eFortunaWithIdv4/" + ID + "/").set({
-    //     matchOdds, "ceva": "alune"
-    // }
-    //     , function (error) {
-    //         if (error) {
-    //             // The write failed...
-    //             console.log({ error });
-    //         } else {
-    //             console.log("success");
-    //             // Data saved successfully!
-    //         }
-    //     });
-    return matchOdds;
 }
 function compareDates(d2) {
     let date = new Date;
@@ -669,10 +676,11 @@ function compareDates(d2) {
 
 }
 async function verifyEventStartingTime(key) { //key prin referinta este ID ul evenimentului 
-    let timeFromApi = linkSportRadar + key;
-    let result = await fetchUrlJson(timeFromApi);//este in secunde si am transformat in ms cu *1000
-    if (result.doc[0] && result.doc[0].data.time) {
-        if ((new Date(result.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60 > 0) {
+    let timeFromApi1 = linkSportRadar + key;
+    let result1 = await fetchUrlJson(timeFromApi1);//este in secunde si am transformat in ms cu *1000
+    if (result1.doc[0] && result1.doc[0].data.time) {
+        if ((new Date(result1.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60 > 0) {
+            // console.log((new Date(result1.doc[0].data.time.uts * 1000 - Date.now())) / 1000 / 60);
             return true;
         }
     }
@@ -680,28 +688,36 @@ async function verifyEventStartingTime(key) { //key prin referinta este ID ul ev
 }
 function checkIfEventHasMarkets(match) {
     if (match.matchOdds) {
-        return true;
+        if (match.matchOdds.markets)
+            return true;
+        return false;
     } else {
         return false;
     }
 }
-
 function compareBetanoWithFortunaMatches() {//cauta meciurile care sunt disponibilie si pe fortuna si pe betano
     let counter = 0;
-    firebase.database().ref('meciuri-BetanoWithId').on('value', async (snap) => {
+    firebase.database().ref('meciuri-BetanoWithIdV2').get().then(async (snap) => {
         let valuesBetano = snap.val(); // console.log(valuesBetano); let sizeBetano = snap.size();
-        firebase.database().ref('meciuri-eFortunaWithIdv4').on('value', async (snap1) => {
+        firebase.database().ref('meciuri-eFortunaWithIdv5').get().then(async (snap1) => {
             let valuesFortuna = snap1.val();
+            console.log(snap1);
             console.log(valuesFortuna); // let sizeFortuna = snap.size();
             for (const [keyB, valueB] of Object.entries(valuesBetano)) {  // console.log(valuesBetano[keyB]);
-                if (valuesFortuna[keyB] != null) {
-                    if (verifyEventStartingTime(keyB)) {
+                if (valuesFortuna[keyB]) {
+                    // let verify= await verifyEventStartingTime(keyB);
+                    // console.log(verify);
+                    // console.log(keyB);
+                    // scrapeFortunaMatchOdds(valuesFortuna[keyB].eFortunaUrl, valuesFortuna[keyB].sportRadarID);
+                    if (await verifyEventStartingTime(keyB)) {
                         console.log(valuesFortuna[keyB]);
                         console.log(valuesBetano[keyB]);
-
+                        console.log(checkIfEventHasMarkets(valuesFortuna[keyB]))
                         if (checkIfEventHasMarkets(valuesFortuna[keyB])) {
                             console.log("exita");
-                        } else {
+                            compareOddsEvent(valuesFortuna[keyB], valuesBetano[keyB]);
+                        }
+                        else {
                             console.log("nu exista");
                             scrapeFortunaMatchOdds(valuesFortuna[keyB].eFortunaUrl, valuesFortuna[keyB].sportRadarID);
                         }
@@ -718,6 +734,127 @@ function compareBetanoWithFortunaMatches() {//cauta meciurile care sunt disponib
 
 
     });
+}
+function compareOddsEvent(fortuna, betano) {
+
+    for (let index = 0; index < betano.markets.length; index++) {
+        // console.log(betano.markets[index].name);
+        if (fortuna.matchOdds.markets)
+            for (let index2 = 0; index2 < fortuna.matchOdds.markets.length; index2++) {
+                if (fortuna.matchOdds.markets[index2]) {
+                    // console.log(fortuna.matchOdds.markets[index2].marketName);
+
+                    if (betano.markets[index].name == "Rezultat final" && fortuna.matchOdds.markets[index2].marketName == "1X2") {
+                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
+                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[2].oddValue);
+                        console.log(betano.markets[index].selections[2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                        calculator3way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                    }
+                    if (betano.markets[index].name == "Șansă dublă" && fortuna.matchOdds.markets[index2].marketName == "1X-X2-12") {
+                        console.log('Sansa Dubla');
+                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
+                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                        console.log(betano.markets[index].selections[2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[2].oddValue);
+                    } if (betano.markets[index].name == "Ambele echipe înscriu" && fortuna.matchOdds.markets[index2].marketName == " Ambele marcheaza ") {
+                        console.log('Amebele inscriu ');
+                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
+                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                    }
+                    if (betano.markets[index].name == "Niciun pariu pe egal" && fortuna.matchOdds.markets[index2].marketName == " Victorie fara egal ") {
+                        console.log('Niciun pariu pe egal');
+                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
+                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                        calculator2way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                    }
+                    if (betano.markets[index].name == "Total goluri Peste/Sub (suplimentar)" && fortuna.matchOdds.markets[index2].marketName == " Total goluri / Total goluri asiatice ") {
+                        console.log('Total goluri Peste/Sub');
+                        compareAndCalculate(betano.markets[index].selections, fortuna.matchOdds.markets[index2].allMarkets);
+                    }
+                    if (betano.markets[index].name == "Pauză/Final" && fortuna.matchOdds.markets[index2].marketName == " Pauza/final ") {
+                        console.log('Pauza Final');
+                        for (let c1 = 0; c1 < fortuna.matchOdds.markets[index2].allMarkets.length; c1++) {
+                            // console.log(fortuna.matchOdds.markets[index2].allMarkets[c1].oddName);
+                            for (let c2 = 0; c2 < betano.markets[index].selections.length; c2++) {
+                                // console.log(betano.markets[index].selections[c2].name);
+                                if (fortuna.matchOdds.markets[index2].allMarkets[c1].oddName == betano.markets[index].selections[c2].name) {
+                                    console.log(fortuna.matchOdds.markets[index2].allMarkets[c1].oddName);
+                                    console.log(betano.markets[index].selections[c2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[c1].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        else {
+
+            // scrapeFortunaMatchOdds(fortuna.eFortunaUrl, fortuna.sportRadarID);
+            console.log('cote adaugate la');
+        }
+
+    }
+}
+function compareAndCalculate(betano, fortuna) {
+    for (let index = 0; index < betano.length; index++) {
+        for (let index1 = 0; index1 < fortuna.length; index1++) {
+            if (betano[index].name.toLowerCase().split(" ")[0] == "peste" && fortuna[index1].oddName.toLowerCase().split(' ')[0] == "sub" && betano[index].name.toLowerCase().split(" ")[1] == fortuna[index1].oddName.toLowerCase().split(' ')[1]) {
+                console.log(betano[index].name.toLowerCase());//PESTE
+                console.log(betano[index].price + " " + fortuna[index1 + 1].oddValue);
+                console.log(betano[index + 1].price + " " + fortuna[index1].oddValue);
+                console.log(fortuna[index1].oddName.toLowerCase());//SUB
+                calculator2way(betano[index].price, betano[index + 1].price, fortuna[index1 + 1].oddValue, fortuna[index1].oddValue)
+
+                // calculateProfit2way(betano[index].price,fortuna[index1].oddValue);
+            }
+        }
+
+    }
+}
+//pentru 1X2 type bets 
+function calculator3way(teamB, equalB, team2B, teamF, equalF, team2F) {
+    let team1 = biggerNr(teamB, teamF);
+    let equal = biggerNr(equalB, equalF);
+    let team2 = biggerNr(team2B, team2F);
+    calculateProfit3way(team1, equal, team2);
+
+}
+function biggerNr(nr1, nr2) {
+    if (nr1 >= nr2) {
+        return nr1;
+    }
+    if (nr2 >= nr1) {
+        return nr2;
+    }
+
+}
+function calculateProfit3way(x, y, z) {
+    let investment = 300;
+    let result;
+    result = investment - investment / x;
+    result = result - investment / y;
+    result = result - investment / z;
+    console.log(result);
+    if (result > 0) {
+        console.log("POZITIV");
+    }
+
+}
+function calculator2way(result1B, result2B, result1F, result2F) {
+    let result1 = biggerNr(result1B, result1F);
+    let result2 = biggerNr(result2B, result2F);
+    calculateProfit2way(result1, result2);
+
+}
+function calculateProfit2way(x, y) {
+    let investment = 300;
+    let result;
+    result = investment - investment / x;
+    result = result - investment / y;
+    console.log(result);
+    if (result > 0) {
+        console.log("POZITIV");
+    }
+
 }
 async function showToFrontEnd() {
     var theUrl = "https://api.efortuna.ro/live3/api/live/matches/overview";
@@ -804,7 +941,74 @@ async function showToFrontEnd() {
 
 
 }
+function showToFrontEndV2() {
+    let list = ["17088r", "17087r", "17087o", "182748r", "182761r", "196755r",
+        "1r", "218r", "10215r", "2r", "527r", "4r", "10767r", "1697r", "17877r",
+        "1698r", "18092r", "18443r", "192991r", "192992r", "186905r", "193119r",
+        "193121r", "17405r", "17445r", "190926r", "190985r", "5r", "10067r",
+        "10000r", "197049r", "12227r", "17592r", "17527r", "1635r", "10815r",
+        "10210r", "17714r", "216r", "10486r", "10486r", "217r", "17313r",
+        "11971r", "11969r", "18492r", "17459r", "184740r", "215r", "11963r",
+        "10467r", "11962r", "17083r", "17082r", "17086r", "17385r", "197549r",
+        "17067r", "17069r", "17370r", "184592r", "17799r", "16947r", "1636r",
+        "10392r", "193128r", "17497r", "16823r", "16833r", "16826r", "17538r",
+        "16765r", "16849r", "16842r", "17158r", "184591r", "16918r", "16921r",
+        "16952r", "16941r", "16955r", "17126r", "17122r", "17124r", "17123r",
+        "198492r", "17041r", "184021r", "185904r", "18265r", "17073r", "186962r",
+        "17901r", "17491r", "17391r", "17494r", "17819r", "17809r", "183295r",
+        "17076o", "17080r", "17396r", "1647r", "10346r", "10345r", "1630r",
+        "1672r", "1673r", "17315r", "17695r", "17118r", "17403r", "17024r",
+        "18198r", "17093r", "17091r", "17439r", "200263r", "200268r", "195785r"
+        , "17548r", "193989r", "16880r", "16901r", "16893r", "16887r", "187416r",
+        "16932r", "16940r", "189547r", "17572r", "181553r", "194920r", "17249r", "191634r",
+        "17264r", "195435r", "184596r", "17383r", "17595r", "188482r", "196214r", "17917r",
+        "17078r", "17103r", "17105r", "191952r", "17727r", "18093r", "193471r", "189375r",
+        "17766r", "17619r", "16816r", "181734r", "183604r", "17620r", "17823r", "189365r",
+        "17060o", "191722r", "17906r", "187051r", "195765r", "17530r", "182900r", "17578r",
+        "192170r", "181753r", "182985r", "17049r", "17900r", "17545r", "17839r", "17796r",
+        "17716r", "17943r", "181647r", "189785r", "194048r", "17827r", "193800r", "193792r",
+        "17525r", "193821r", "194293r", "17539r", "183037r", "183204r", "195438r", "17377r",
+        "18442r", "182133r", "186111r", "200011r", "197284r", "189482r", "191873r", "17407r",
+        "188809r", "17026r", "17228r", "17160r", "182080r",
 
+    ]
+    let l = "https://ro.betano.com/sport/fotbal/ligi/";
+    list.forEach(async element => {
+        let data = await fetchUrlText(l + element);
+        var parser = new DOMParser();
+        xmlDoc = parser.parseFromString(data, "text/html");
+        var betanoEvents = JSON.parse(xmlDoc.body.querySelector("script").innerHTML.split('window["initial_state"]=')[1]);
+        if (betanoEvents.data.blocks)
+            for (let index = 0; index < betanoEvents.data.blocks[0].events.length; index++) {
+                let url = "https://ro.betano.com/api";
+                fetch(url + betanoEvents.data.blocks[0].events[index].url, options)
+                    .then(response => response.json())
+                    .then(async (response) => {
+                        firebase.database().ref("meciuri-BetanoWithIdV2/" + await response.data.event.betRadarId + "/").set(
+                            {
+                                name: await response.data.event.name,
+                                startTime: await response.data.event.startTime,
+                                shortName: await response.data.event.shortName,
+                                leagueDescription: await response.data.event.leagueDescription,
+                                markets: await response.data.event.markets,
+                                statsUrl: await response.data.event.stats[0],
+                                betRadarId: await response.data.event.betRadarId
+                            }
+                            , function (error) {
+                                if (error) {
+                                    // The write failed...
+                                    console.log({ error });
+                                } else {
+                                    console.log("success");
+                                    // Data saved successfully!
+                                }
+                            });
+                    })
+
+            }
+        console.log(betanoEvents.data.blocks);
+    });
+}
 
 let urlAPIEsporsBattle = "https://football.esportsbattle.com/api/tournaments/65600/matches";
 async function showToFrontEndEsportsBattleMatthes() {
@@ -873,20 +1077,38 @@ function writeScoreMatchesToDB(link) {
     console.log("minic");
 }
 function removeMatches() {
-    var data = firebase.database().ref("meciuri-eFortunaWithIdv4");
+    var data = firebase.database().ref("meciuri-eFortunaWithIdv5");
     data.remove().then(() => { console.log("location removed"); });
-}
 
+
+    //in caz ca adaugi toate meciurile pe pagina principala in firebase
+    // firebase.database().ref("meciuri-20-12-2022").on('value', async (snap) => {
+
+    //     for (const [key, values] of Object.entries(snap.val())) {
+    //         console.log(key);
+    //         var data1 = firebase.database().ref("meciuri-BetanoWithId" + key);
+    //         data1.remove().then(() => { console.log("location removed" + key); });
+    //     }
+    // });
+
+
+
+
+}
+// am schimbat functia la values[key].stats a devenit values[key].statsUrl
 function readDataFromDatabase() {
-    firebase.database().ref('meciuri-21-12-2022').on('value', async (snap) => {
+
+    firebase.database().ref('meciuri-BetanoWithIdV2').get().then(async (snap) => {
         let values = snap.val();
         console.log(snap.val());
         for (const [key, value] of Object.entries(values)) {
-            console.log(values[key].stats.url.split("match/"));
-            let matchScore = await fetchUrlJson(linkSportRadar + values[key].stats.url.split("match/")[1]);
+            console.log(values[key].statsUrl.url.split("match/"));
+            let matchScore = await fetchUrlJson(linkSportRadar + values[key].statsUrl.url.split("match/")[1]);
 
             let matchScore1 = matchScore.doc[0].data.result;
+            console.log(matchScore1);
             if (matchScore1) {
+
                 firebase.database().ref("meciuri-20-12-2022/" + key + "/score").set({
                     "score": matchScore1
                 }, function (error) {
@@ -938,7 +1160,7 @@ function checkHowManyEqualsHasBeenMade() {
 }
 
 function statisticiMeciuri() {
-    firebase.database().ref('meciuri-17-12-2022').on('value', async (snap) => {
+    firebase.database().ref('meciuri-20-12-2022').on('value', async (snap) => {
         let values = snap.val();
         let AllMatchesNR = 0;
         let AllMatchesNROdd = 0;
@@ -959,6 +1181,7 @@ function statisticiMeciuri() {
         let AllMatchesNRInWhichJustOneTeamScoresOverOnePointFive = 0;
         let NuInscrieAmbeleEchipeSauSubUnuPunctCinci = 0;
         let d = 0, d2 = 0;
+        let n = 0, m = 0;
         let v = [];
         for (const [key, value] of Object.entries(values)) {
             let checkNull = values[key].score;
@@ -1019,6 +1242,11 @@ function statisticiMeciuri() {
                         v[d] = "" + Scoreteam1 + "-" + Scoreteam2 + "";
                         d++;
                     }
+                    if (((Scoreteam1 > Scoreteam2) || (Scoreteam1 < Scoreteam2)) && (Scoreteam1 + Scoreteam2) % 2 == 0) {
+                        n++;
+                    } if (((Scoreteam1 > Scoreteam2) || (Scoreteam1 < Scoreteam2)) && (Scoreteam1 + Scoreteam2) % 2 == 1) {
+                        m++;
+                    }
                     if ((Scoreteam1 + Scoreteam2 < 1.5) || (Scoreteam1 > 0 || Scoreteam2 < 0)) {
                         NuInscrieAmbeleEchipeSauSubUnuPunctCinci++;
 
@@ -1031,23 +1259,25 @@ function statisticiMeciuri() {
         }
         console.log("NR TOTAL DE MECIURI " + AllMatchesNR);
         console.log("NR TOTAL DE MECIURI PARE " + AllMatchesNREven);
-        console.log("NR TOTAL DE MECIURI IMPARE" + AllMatchesNROdd);
-        console.log("NR TOTAL DE MECIURI Egale" + AllMatchesNREqual);
-        console.log("NR TOTAL DE MECIURI Egale sau Impare" + AllMatchesNREqualAndOdd);
-        console.log("NR TOTAL DE MECIURI Impare sau Peste 1.5 golluri" + AllMatchesNROddOverOnePointFive);
-        console.log("NR TOTAL DE MECIURI Impare si Peste 1.5 golluri" + AllMatchesNREOddAndOverOnePointFive);
-        console.log("NR TOTAL DE MECIURI Pare sau Peste 2.5 golluri" + AllMatchesNREvenOverTwoPointFive);
-        console.log("NR TOTAL DE MECIURI Pare si Peste 2.5 golluri" + AllMatchesNREvenAndOverTwoPointFive);
-        console.log("Peste 2.5 golluri" + AllMatchesNROverTwoPointFive);
-        console.log("Peste 1.5 golluri" + AllMatchesNROverOnePointFive);
-        console.log("Sub 1.5 golluri" + AllMatchesNRUnderOnePointFive);
-        console.log("Sub 2.5 golluri" + AllMatchesNRUnderTwoPointFive);
+        console.log("NR TOTAL DE MECIURI IMPARE " + AllMatchesNROdd);
+        console.log("NR TOTAL DE MECIURI Egale " + AllMatchesNREqual);
+        console.log("NR TOTAL DE MECIURI Egale sau Impare " + AllMatchesNREqualAndOdd);
+        console.log("NR TOTAL DE MECIURI Impare sau Peste 1.5 golluri " + AllMatchesNROddOverOnePointFive);
+        console.log("NR TOTAL DE MECIURI Impare si Peste 1.5 golluri " + AllMatchesNREOddAndOverOnePointFive);
+        console.log("NR TOTAL DE MECIURI Pare sau Peste 2.5 golluri " + AllMatchesNREvenOverTwoPointFive);
+        console.log("NR TOTAL DE MECIURI Pare si Peste 2.5 golluri " + AllMatchesNREvenAndOverTwoPointFive);
+        console.log("Peste 2.5 golluri " + AllMatchesNROverTwoPointFive);
+        console.log("Peste 1.5 golluri " + AllMatchesNROverOnePointFive);
+        console.log("Sub 1.5 golluri " + AllMatchesNRUnderOnePointFive);
+        console.log("Sub 2.5 golluri " + AllMatchesNRUnderTwoPointFive);
 
-        console.log("NR TOTAL DE MECIURI IN CARE AMBERLE ECHIPE AU MARCAT" + AllMatchesNRInWhichBothTeamScored);
+        console.log("NR TOTAL DE MECIURI IN CARE AMBERLE ECHIPE AU MARCAT " + AllMatchesNRInWhichBothTeamScored);
         console.log("NR TOTAL DE MECIURI IN CARE DOAR O SINGURA ECHIPA MARCHEAZA PESTE UN 1.5 " + AllMatchesNRInWhichJustOneTeamScoresOverOnePointFive);
         console.log("NR TOTAL DE MECIURI IN CARE Abele Echipe Nu au inscris nici un gol " + AllMatchesNRInWhichBothTeamsScoredZero);
-        console.log("Castiga Echipa 1 sau Echipa 2 " + d + " altfel" + d2);
-        console.log("Ambele echipe nu vor inscrie sau scorul va fii sub 1.5" + NuInscrieAmbeleEchipeSauSubUnuPunctCinci);
+        console.log("Castiga Echipa 1 sau Echipa 2 " + d);
+        console.log("Castiga Echipa 1 sau Echipa 2 sau scorul lor este par " + n);
+        console.log("Castiga Echipa 1 sau Echipa 2 sau scorul lor este impar " + m);
+        console.log("Ambele echipe nu vor inscrie sau scorul va fii sub 1.5 " + NuInscrieAmbeleEchipeSauSubUnuPunctCinci);
         // v.forEach(element => {
         //     console.log(element);
         // });
@@ -1080,7 +1310,25 @@ if (userItem) {
 
 
 
-
+function unibetOddsScalp() {
+    let urlCreation = ["https://dt.sportradar.com/?match=", '&bookmaker=6&oddstype=2&oddsfield=0&refbid=6&lang=ro'];
+    console.log(urlCreation);
+    firebase.database().ref('meciuri-BetanoWithIdV2').get().then(async (snap) => {
+        let values = snap.val();
+        console.log(snap.val());
+        for (const [key, value] of Object.entries(values)) {
+            let eventUrl = urlCreation[0] + key + urlCreation[1];
+            if (await verifyEventStartingTime(key)) {
+                let data = await fetchUrlText(eventUrl);
+                var parser = new DOMParser();
+                xmlDoc = parser.parseFromString(data, "text/html");
+                // xmlDOc = xmlDoc.querySelector(".KambiBC-bet-offer-category.KambiBC-expanded");
+                console.log(xmlDoc.body);
+                console.log(eventUrl);
+            }
+        }
+    });
+}
 
 
 

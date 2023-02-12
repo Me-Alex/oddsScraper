@@ -25,35 +25,50 @@
 
 
 	<!-- Content -->
-	<div class="containerBody">
+	<div class="column width100vh">
+		<div class="containerBody">
 
-		<div class="container">
-			<h1>Bett website </h1>
-			<div class="colums">
-				<div class="col">
-					<p>1(Ehipa1) -</p> <span>null</span>
+			<div class="container">
+				<h1>Bett website </h1>
+				<div class="colums">
+					<div class="col">
+						<p>1(Ehipa1) -</p> <span>null</span>
+					</div>
+					<div class="col">
+						<p>X(pauza) -</p> <span>null</span>
+					</div>
+					<div class="col">
+						<p>2(Ehipa2) -</p><span>null</span>
+					</div>
+					<!-- <div class="col"></div> -->
 				</div>
-				<div class="col">
-					<p>X(pauza) -</p> <span>null</span>
+				<div class="colums">
+					<div class="col">
+						<p>1(Ehipa1 niciun pariu pe egal) -</p> <span>null</span>
+					</div>
+					<div class="col" style="background-color: red;">
+						<p></p> <span></span>
+					</div>
+					<div class="col">
+						<p>2(Ehipa2 niciun pariu pe egal) -</p><span>null</span>
+					</div>
+					<!-- <div class="col"></div> -->
 				</div>
-				<div class="col">
-					<p>2(Ehipa2) -</p><span>null</span>
-				</div>
-				<!-- <div class="col"></div> -->
+				<a class="pariaza-aici" target="_blank" href="">Pariaza aici</a>
+
 			</div>
-			<div class="colums">
-				<div class="col">
-					<p>1(Ehipa1 niciun pariu pe egal) -</p> <span>null</span>
-				</div>
-				<div class="col" style="background-color: red;">
-					<p></p> <span></span>
-				</div>
-				<div class="col">
-					<p>2(Ehipa2 niciun pariu pe egal) -</p><span>null</span>
-				</div>
-				<!-- <div class="col"></div> -->
+		</div>
+
+		<div class="containerSameEventBody">
+			<h1>Nume bet</h1>
+			<div class="containerSameEvent  nameEvent">
+				<p class="sameEventNamr1">Team </p>
+				<p class="sameEventNamr2">Team 2</p>
 			</div>
-			<a class="pariaza-aici" target="_blank" href="">Pariaza aici</a>
+			<div class="containerSameEvent  odds">
+				<p class="sameEventNameOdds">1.15</p>
+				<p class="sameEventOdds">2.15</p>
+			</div>
 
 		</div>
 	</div>
@@ -78,7 +93,13 @@
 				<li class="current" onclick="show()"><a href="#">Admin Comands <i class="arrow down"></i></a></li>
 				<div class="show">
 					<li>
-						<button onclick="showToFrontEnd()">Show Matches</button>
+						<button onclick="showToFrontEndV2()">Show Matches Betano V2</button>
+					</li>
+					<li>
+						<button onclick="showToFrontEnd()">Show Matches Betano old</button>
+					</li>
+					<li>
+						<button onclick="unibetOddsScalp()">Show Matches Unibet</button>
 					</li>
 					<li>
 						<button class="esportButton" onclick="showToFrontEndEfortuna()">Show Matches Efortuna</button>

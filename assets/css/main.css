@@ -14,7 +14,12 @@
 	justify-content: ;
 	align-items: center;
 }
-.date_time{width: 40px;padding:5px;}
+
+.date_time {
+	width: 40px;
+	padding: 5px;
+}
+
 .matchContainer * {
 	font-size: larger;
 }
@@ -32,17 +37,19 @@
 body {
 	background-color: #ffaaa7;
 }
-.containerBody2{
+
+.containerBody2 {
 	display: flex;
-	flex-direction:column;
+	flex-direction: column;
 	overflow-y: scroll;
 	height: 100vh;
 	width: 100%;
 	padding-top: 50px;
-	gap:50px;
+	gap: 50px;
 	margin: 0;
 	border: 0;
 }
+
 .containerB {
 	width: 100%;
 	display: flex;
@@ -67,9 +74,10 @@ body {
 
 
 
-.team_name{
-	width:200px;
+.team_name {
+	width: 200px;
 }
+
 .match_info,
 .card_title {
 	display: flex;
@@ -80,16 +88,17 @@ body {
 
 .team1,
 .team2 {
-	
+
 	display: flex;
 	align-items: center;
 }
-.team1Name,.team2Name{
+
+.team1Name, .team2Name {
 	height: 50px;
 	width: 200px;
 	overflow-y: hidden;
 	display: flex;
-align-items: center;
+	align-items: center;
 }
 
 .team1 img,
@@ -135,9 +144,12 @@ align-items: center;
 	margin: 5px 10px;
 }
 
+.width100vh {
+	width: 100vw;
+}
+
 .containerBody {
 	overflow-y: scroll;
-	height: 100vh;
 	width: 100%;
 	padding: 0;
 	margin: 0;
@@ -166,6 +178,30 @@ h1 {
 	font-weight: bolder;
 }
 
+.containerSameEvent {
+	display: flex;
+	width: 50%;
+
+}
+
+.containerSameEventBody {
+	/* width: 50%; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.containerSameEvent{
+	display: flex;
+	justify-content: center;
+}
+
+.containerSameEvent p{
+	width: 50%;
+	display: flex;
+	justify-content: center;
+}
 .colums {
 
 	display: flex;
