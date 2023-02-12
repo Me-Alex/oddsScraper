@@ -1302,7 +1302,7 @@ if (userItem) {
     document.querySelector(".hide").style.display = "none";
     document.querySelector(".hide1").style.display = "none";
     document.querySelector(".name").onclick = () => {
-        window.location = window.location.host+"profile.html";
+        window.location ="profile.html";
     }
     document.querySelector(".name").innerHTML = userItem;
     document.querySelector(".name").style.cursor = "pointer";
