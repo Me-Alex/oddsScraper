@@ -108,7 +108,7 @@ if (signInGoogleBtn) {
             //         console.error("Error writing document: ", error);
             //     });
 
-            window.location = "http://127.0.0.1:5500";
+            window.location = "index.html";
 
 
         })
