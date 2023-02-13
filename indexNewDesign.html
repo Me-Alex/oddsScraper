@@ -18,6 +18,27 @@
     <br>
 
     <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+
+        }
+
+        .fa-angle-down {
+            display: flex;
+            transition: transform 0.2s ease-in-out;
+            align-items: center;
+            justify-content: right;
+        }
+
+        .show {
+            display: inherit;
+        }
+
         @media (max-width: 767px) {
             .card-group {
                 flex-direction: column;
@@ -343,28 +364,6 @@
 
     </div>
 
-    <style>
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-
-        }
-
-        .fa-angle-down {
-            display: flex;
-            transition: transform 0.2s ease-in-out;
-            align-items: center;
-            justify-content: right;
-        }
-
-        .show {
-            display: inherit;
-        }
-    </style>
 
     <script>
 
@@ -383,50 +382,50 @@
         }
         const htmlString = '<div class="card" onclick="toggleDropdown(this)">' +
             '<div class="card-header">' +
-                '<h1 class="card-title">Event' +
-                '</h1>' + 
-                '<i class="fas fa-angle-down" id="angle-down"></i>' +
+            '<h1 class="card-title">Event' +
+            '</h1>' +
+            '<i class="fas fa-angle-down" id="angle-down"></i>' +
             '</div>' +
             '<div class="card-body dropdown-content" id="myDropdown" style="display: none;">' +
-                '<div class="card-group">' +
-                    '<div class="card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">1 (Ehipa1)</h5>' +
-                            '<p class="card-text">Odds: <span>null</span></p>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">X (pauza)</h5>' +
-                            '<p class="card-text">Odds: <span>null</span></p>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">2 (Ehipa2)</h5>' +
-                            '<p class="card-text">Odds: <span>null</span></p>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="card-group">' +
-                    '<div class="card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">1 (Ehipa1 niciun pariu pe egal)</h5>' +
-                            '<p class="card-text">Odds: <span>null</span></p>' +
-                        '</div>' +
-                    '</div>' +
-                    '<div class="card">' +
-                        '<div class="card-body">' +
-                            '<h5 class="card-title">2 (Ehipa2 niciun pariu pe egal)</h5>' +
-                            '<p class="card-text">Odds: <span>null</span></p>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="text-center mt-3">' +
-                    '<a class="btn btn-primary" target="_blank" href="">Pariaza aici</a>' +
-                '</div>' +
+            '<div class="card-group">' +
+            '<div class="card">' +
+            '<div class="card-body">' +
+            '<h5 class="card-title">1 (Ehipa1)</h5>' +
+            '<p class="card-text">Odds: <span>null</span></p>' +
             '</div>' +
-        '</div>';
+            '</div>' +
+            '<div class="card">' +
+            '<div class="card-body">' +
+            '<h5 class="card-title">X (pauza)</h5>' +
+            '<p class="card-text">Odds: <span>null</span></p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="card">' +
+            '<div class="card-body">' +
+            '<h5 class="card-title">2 (Ehipa2)</h5>' +
+            '<p class="card-text">Odds: <span>null</span></p>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="card-group">' +
+            '<div class="card">' +
+            '<div class="card-body">' +
+            '<h5 class="card-title">1 (Ehipa1 niciun pariu pe egal)</h5>' +
+            '<p class="card-text">Odds: <span>null</span></p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="card">' +
+            '<div class="card-body">' +
+            '<h5 class="card-title">2 (Ehipa2 niciun pariu pe egal)</h5>' +
+            '<p class="card-text">Odds: <span>null</span></p>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="text-center mt-3">' +
+            '<a class="btn btn-primary" target="_blank" href="">Pariaza aici</a>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
     </script>
 
 </body>

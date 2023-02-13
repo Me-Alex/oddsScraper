@@ -749,6 +749,34 @@ function compareOddsEvent(fortuna, betano) {
                         console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[2].oddValue);
                         console.log(betano.markets[index].selections[2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
                         calculator3way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                        var htmlString = '<div class="card" onclick="toggleDropdown(this)">' +
+                            '<div class="card-header">' +
+                            '<h1 class="card-title">' +betano.shortName +
+                            '</h1>' +
+                            '<i class="fas fa-angle-down" id="angle-down"></i>' +
+                            '</div>' +
+                            '<div class="card-body dropdown-content" id="myDropdown" style="display: none;">' +
+                            '<div class="card-group">' +
+                            '<div class="card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title 1">' + betano.markets[index].selections[0].fullName + '</h5>' +
+                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[0].price + '</span></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title x">' + betano.markets[index].selections[1].fullName + '</h5>' +
+                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[1].price + '</span></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title 2">' + betano.markets[index].selections[2].fullName + '</h5>' +
+                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[2].price + '</span></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
                     }
                     if (betano.markets[index].name == "Șansă dublă" && fortuna.matchOdds.markets[index2].marketName == "1X-X2-12") {
                         console.log('Sansa Dubla');
@@ -765,6 +793,26 @@ function compareOddsEvent(fortuna, betano) {
                         console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);//ordine betano 1 X 2 ordine fortuna 1 2 X
                         console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
                         calculator2way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
+                        htmlString += '<div class="card-group">' +
+                            '<div class="card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title 1">' + betano.markets[index].selections[0].fullName + '</h5>' +
+                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[0].price + '</span></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="card">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title 2">' + betano.markets[index].selections[1].fullName + '</h5>' +
+                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[1].price + '</span></p>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="text-center mt-3">' +
+                            '<a class="btn btn-primary" target="_blank" href="">Pariaza aici</a>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+                        document.body.querySelector('.column').innerHTML += htmlString;
                     }
                     if (betano.markets[index].name == "Total goluri Peste/Sub (suplimentar)" && fortuna.matchOdds.markets[index2].marketName == " Total goluri / Total goluri asiatice ") {
                         console.log('Total goluri Peste/Sub');
@@ -1302,7 +1350,7 @@ if (userItem) {
     document.querySelector(".hide").style.display = "none";
     document.querySelector(".hide1").style.display = "none";
     document.querySelector(".name").onclick = () => {
-        window.location ="profile.html";
+        window.location = "profile.html";
     }
     document.querySelector(".name").innerHTML = userItem;
     document.querySelector(".name").style.cursor = "pointer";
