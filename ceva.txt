@@ -136,4 +136,12 @@ https://api.sofascore.com/api/v1/event/10888503/odds/202/all
 10346r,10345r,1630r,1672r,1673r,17315r,17695r,17118r,17403r,17024r,18198r,
 17093r,17091r,17439r,
 
+
+unibet //////
+
 unibet scalp url:https://dt.sportradar.com/?match=38896557&bookmaker=6&oddstype=2&oddsfield=3&refbid=6&lang=ro
+
+https://www.unibet.ro/kambi-rest-api/sportradar/widget/event/ro/1018752104    returns betradar ID
+https://eu-offering-api.kambicdn.com/offering/v2018/ubro/statistics/event/1018752104.json?externalEventProvider=EP_BETRADAR   same returns id
+https://widgets.fn.sportradar.com/unibet/ro/Etc:UTC/gismo/match_bookmakerodds/34152145
+https://www.unibet.ro/kambi-rest-api/sportradar/widget/event/ro/1018752104
