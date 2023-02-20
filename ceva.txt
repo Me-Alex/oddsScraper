@@ -145,3 +145,23 @@ https://www.unibet.ro/kambi-rest-api/sportradar/widget/event/ro/1018752104    re
 https://eu-offering-api.kambicdn.com/offering/v2018/ubro/statistics/event/1018752104.json?externalEventProvider=EP_BETRADAR   same returns id
 https://widgets.fn.sportradar.com/unibet/ro/Etc:UTC/gismo/match_bookmakerodds/34152145
 https://www.unibet.ro/kambi-rest-api/sportradar/widget/event/ro/1018752104
+
+
+
+
+https://dt.sportradar.com/?match=34265911&bookmaker=6&oddstype=2&oddsfield=3&refbid=6&lang=ro
+
+
+
+
+
+
+
+PUBLIC WIN API
+
+https://livecont.publicwin.ro/sportcore/livecontent/api/prematchevents/events?key=ro&bets=95,6&tfrom=1677189599&tto=1677276000&spid=0
+
+
+PUBLIC WIN API
+
+23,124,26,28,29
