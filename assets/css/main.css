@@ -36,6 +36,62 @@
 
 body {
 	background-color: #ffaaa7;
+	display: flex !important;
+	overflow: scroll;
+	height: 100vh;
+
+
+}
+
+body::-webkit-scrollbar {
+	display: none;
+}
+
+table {
+	margin-top: 80px;
+	max-width: 600px;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	margin:0 auto;
+}
+
+th, td {
+	border: 1px solid #000000;
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #000000;
+}
+
+
+@media only screen and (max-width: 600px) {
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	th {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	td {
+		border: none;
+		border-bottom: 1px solid #ddd;
+		position: relative;
+		padding-left: 50%;
+		text-align: left;
+	}
+
+	td:before {
+		position: absolute;
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		content: attr(data-th) ":";
+		font-weight: bold;
+	}
 }
 
 .containerBody2 {
@@ -192,16 +248,17 @@ h1 {
 	align-items: center;
 }
 
-.containerSameEvent{
+.containerSameEvent {
 	display: flex;
 	justify-content: center;
 }
 
-.containerSameEvent p{
+.containerSameEvent p {
 	width: 50%;
 	display: flex;
 	justify-content: center;
 }
+
 .colums {
 
 	display: flex;
@@ -265,8 +322,8 @@ pre, a, abbr, acronym, address, big, cite,
 code, del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var, b,
 u, i, center, dl, dt, dd, ol, ul, li, fieldset,
-form, label, legend, table, caption, tbody,
-tfoot, thead, tr, th, td, article, aside,
+form, label, legend, caption, tbody,
+tfoot, thead, article, aside,
 canvas, details, embed, figure, figcaption,
 footer, header, hgroup, menu, nav, output, ruby,
 section, summary, time, mark, audio, video {
@@ -285,7 +342,7 @@ footer, header, hgroup, menu, nav, section {
 
 body {
 	display: flex;
-	flex-direction: row;
+	/* flex-direction: row; */
 }
 
 ol, ul {
@@ -301,10 +358,6 @@ blockquote:before, blockquote:after, q:before, q:after {
 	content: none;
 }
 
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
 
 body {
 	-webkit-text-size-adjust: none;
@@ -1888,35 +1941,6 @@ p, ul, ol, dl {
 
 }
 
-/* Table */
-
-table {
-	margin-bottom: 1em;
-	width: 100%;
-}
-
-table tbody tr:nth-child(2n+2) {
-	background: #f4f4f4;
-}
-
-table td {
-	padding: 0.5em 1em 0.5em 1em;
-}
-
-table th {
-	text-align: left;
-	font-weight: 700;
-	padding: 0.75em 1em 0.75em 1em;
-}
-
-table thead {
-	border-bottom: solid 1px #ddd;
-}
-
-table tfoot {
-	border-top: solid 1px #ddd;
-	background: #eee;
-}
 
 /* Form */
 
@@ -2530,9 +2554,11 @@ ol li {
 	text-shadow: -1px -1px 0px rgba(0, 0, 0, 0.5);
 	width: 14em;
 	height: 100vh;
+	overflow-y: scroll;
 	padding: 3em 1.35em 1em 1.15em;
 	background: #364050 url("images/bg01.png");
 	left: 0;
+	float: left;
 	box-shadow: inset -0.1em 0em 0.35em 0em rgba(0, 0, 0, 0.15);
 	-moz-order: -1;
 	-webkit-order: -1;
@@ -2546,6 +2572,12 @@ ol li {
 	-webkit-flex-shrink: 0;
 	-ms-flex-shrink: 0;
 	flex-shrink: 0;
+	text-align: left;
+	margin-left: 0;
+}
+
+#sidebar::-webkit-scrollbar {
+	display: none;
 }
 
 #sidebar form input, #sidebar form select, #sidebar form textarea {

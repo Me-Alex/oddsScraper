@@ -268,108 +268,36 @@
                     <li>
                         <a href="matches.html">Meciuri</a>
                     </li>
-                    <li>
-                        <a href="server.html">Server</a>
-                    </li>
+
                 </div>
-                <li class="current" onclick="show(this)"><a href="#">Tenis Ai Data<i class="arrow down"></i></a>
-                </li>
-                <div class="show" style="display:none">
-                    <li>
-                        <button onclick="writeBetanoTennisDataTOCsv()">Get Tenis Results</button>
-                    </li>
-                    <li>
-                        <button onclick="takeTennisData()">Format Data For Ai </button>
-                    </li>
-                </div>
-                <li class="current" onclick="show(this)"><a href="#">Tenis <i class="arrow down"></i></a>
-                </li>
-                <div class="show" style="display:none">
-                    <li>
-                        <button onclick="showToFrontEndEfortunaTennis()">showToFrontEndTennisFortuna</button>
-                    </li>
-                    <li>
-                        <button onclick="showToFrontEndTennisBetano()">showToFrontEndTennisBetano</button>
-                    </li>
-                </div>
+
                 <li class="current" onclick="show(this)"><a href="#">Show To Front End <i class="arrow down"></i></a>
                 </li>
                 <div class="show" style="display:none">
                     <li>
-                        <button onclick="compareAllBookmakersOdds()">compareAllBookmakersOdds</button>
+                        <button onclick="getBetanoOdds()">getBetanoOdds</button>
                     </li>
                     <li>
-                        <button onclick="compareLiveOdds()">compareLiveOdds</button>
+                        <button onclick="getFortunaOdds()">getFortunaOdds</button>
                     </li>
                     <li>
-                        <button onclick="showToFrontEndV2()">Show Matches Betano V2</button>
+                        <button onclick="updateFortunaOdds(fortunaOdds)">updateFortunaOdds</button>
                     </li>
                     <li>
-                        <button onclick="showToFrontEnd()">Show Matches Betano old</button>
+                        <button onclick="compareFwithB()">compareFwithB</button>
                     </li>
                     <li>
-                        <button onclick="unibetOddsScalp()">Show Matches Unibet</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="showToFrontEndEfortuna()">Show Matches Efortuna</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="compareBetanoWithFortunaMatches()">Compara Meciuri F cu
-                            B</button>
+                        <button onclick="clock()">clock</button>
                     </li>
                 </div>
-                <li class="current" onclick="show(this)"><a href="#">Scrape FOr Matches <i class="arrow down"></i></a>
-                </li>
-                <div class="show" style="display:none">
-                    <!-- <li>
-                        <button class="esportButton" onclick="showToFrontEndEsportsBattleMatthes()">Esports Battle
-                            API</button>
-                    </li> -->
-                    <li>
-                        <button class="esportButton" onclick="checkEventsStartTime()">Event Start TIme old</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="writeMatchesToDB()">Incarca meciuri catre baza de
-                            date</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="removeMatches()">Remove</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="readDataFromDatabase()">Read data</button>
-                    </li>
-
-                    <!-- <li>
-                        <button class="esportButton" onclick="checkHowManyEqualsHasBeenMade()">Nr Total De meciuri /Nr
-                            Egaluri</button>
-                    </li> -->
-                    <li>
-                        <button class="esportButton" onclick="statisticiMeciuri()">Strategie Nr Par/Impar
-                            meciuri</button>
-                    </li>
-                </div>
-                <li class="current" onclick="show(this)"><a href="#">Strategies <i class="arrow down"></i></a>
+                <li class="current" onclick="show(this)"><a href="#">Calculator Dinamic <i class="arrow down"></i></a>
                 </li>
                 <div class="show" style="display:none">
                     <li>
-                        <button class="esportButton" onclick="writeMatchesToDB()">Incarca meciuri catre baza de
-                            date</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="removeMatches()">Remove</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="readDataFromDatabase()">Read data</button>
+                        <button onclick="calculator()">Calculator</button>
+                        <!-- dinamic calculates from the input  -->
                     </li>
 
-                    <li>
-                        <button class="esportButton" onclick="checkHowManyEqualsHasBeenMade()">Nr Total De meciuri /Nr
-                            Egaluri</button>
-                    </li>
-                    <li>
-                        <button class="esportButton" onclick="statisticiMeciuri()">Strategie Nr Par/Impar
-                            meciuri</button>
-                    </li>
                 </div>
                 <li class="logout"> <a>Log out</a> </li>
                 <script>
@@ -401,6 +329,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="fireabase-config.js"></script>
 
+    <script src="calculateoddsServer.js"></script>
     <script src="getapi.js"></script>
     <script type="module" src="sign-inGoogle.js"></script>
 

@@ -1,13 +1,13 @@
 
   const firebaseConfig = {
-  apiKey: "AIzaSyAYL7vd3pD0lOLRi79TfB60pqGBxaf7RCQ",
-  authDomain: "football-1a983.firebaseapp.com",
-  databaseURL: "https://football-1a983-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "football-1a983",
-  storageBucket: "football-1a983.appspot.com",
-  messagingSenderId: "444728787060",
-  appId: "1:444728787060:web:9dbbe5e62523794cb55121",
-  measurementId: "G-WSRYK9XJFV"
+  apiKey: "AIzaSyCQI5eBrdqb-4vC_qpXym0FDMUFvtQBLlE",
+  authDomain: "football4-92626.firebaseapp.com",
+  databaseURL: "https://football4-92626-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "football4-92626",
+  storageBucket: "football4-92626.appspot.com",
+  messagingSenderId: "301682203151",
+  appId: "1:301682203151:web:4f74e6845976f9475ce17a",
+  measurementId: "G-BVLE06PEL4"
   };
 function writeUserData(userId, name, email, imageUrl) {
     const db = getDatabase();
