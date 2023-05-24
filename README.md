@@ -4,6 +4,6 @@
 
 Working on
 
--remaking design 
+-remaking design n/
 -fix login 
 -adding more sure bets
