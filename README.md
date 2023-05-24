@@ -8,4 +8,6 @@ Working on
  
  -fix login 
  
+ -changing from firabase to mySQL database 
+ 
  -adding more sure bets
