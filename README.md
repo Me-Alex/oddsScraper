@@ -8,6 +8,6 @@ Working on
  
  -fix login 
  
- -changing from firabase to mySQL database 
+ -changing from firebase to mySQL database 
  
  -adding more sure bets
