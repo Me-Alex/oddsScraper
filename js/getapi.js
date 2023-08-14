@@ -181,43 +181,12 @@ async function afisareMeciuriEfortuna(matchData) {
 }
 
 
-async function fetchUrl1(url) {
-    const fetchedData = await fetch(url)
-        .then(response => response.url)
-        .catch(err => console.error(err));
-
-    return fetchedData;
-
-}
-async function fetchUrlText(url) {
-    const fetchedData = await fetch(url, options)
-        .then(response => response.text())
-        .catch(err => console.error(err));
-
-    return fetchedData;
-
-}
-async function fetchUrl(url) {
-    const fetchedData = await fetch(url, options)
-        .then(response => response.url)
-        .catch(err => console.error(err));
-
-    return fetchedData;
-
-}
 let aaa = ['https://s5.sir.sportradar.com/fortuna2/ro/m61616356', 'fdfadsf'];
 let getTheResponseUrl = async() => {
     const ee = await fetchUrl(aaa[0]);
     console.log(ee);
 }
-async function fetchUrlJson(url) {
-    const fetchedData = await fetch(url, options)
-        .then(response => response.json())
-        .catch(err => console.error(err));
 
-    return fetchedData;
-
-}
 
 function writeToDbNoModular(path, obj) {
     firebase.database().ref(path).set({
@@ -272,7 +241,7 @@ const options = {
     headers: {
         cookie: 'sticky=stx52.531; __cf_bm=RjI2SaJAReaVg0gxxMCGeozyaV5zo7yNdmPVX7xoMPE-1668875847-0-AYNoAeQrP8TDRRO1jRVTaG7KJ1hlxwZwCXgM2vmbWxWpXh%2FWvFB9hzoQw%2FDxn7xuQSQRfRgV9EaueGAqNLiveRg%3D',
         cookie: 'SESSION=OWRjNjQwODQtMzAwOS00ZmQxLTkzYjktYWNmNTRhZDI3ZDcz',
-        cookie: 'routeid=cc7c23881031c3b0e1bc10781a943f25; PREMATCH_SESSION=MmQ0ZjUxNmItMmVhZC00M2E4LWFmOGMtZTdiODc5YTljNDBk'
+        cookie: 'routeid=a3e0d5fcbba9e2a633b0716e40d1657a; PREMATCH_SESSION=NjNlZjU1NmItODVjNS00MWFkLWFkNzUtMjczOTAxNzY3YTdm'
     }
 };
 
@@ -293,6 +262,8 @@ const event = new Map();
 getTheResponseUrl();
 let map = [
     "europa-conference-league",
+    'romania-supercupa',
+    'amicale-internationale',
     "romania-1",
     "romania-cupa",
     "spania-la-liga",
@@ -495,7 +466,7 @@ async function showToFrontEndEfortunaTennis() {
             } else {
                 console.log('cele 2 linkuri nu usnt asemanatoare');
             }
-            if (index1 == 120) {
+            if (index1 == 122) {
                 console.log("program finished");
                 writeToDb();
             }
@@ -579,7 +550,7 @@ async function showToFrontEndEfortuna() {
             } else {
                 console.log('cele 2 linkuri nu usnt asemanatoare');
             }
-            if (index1 == 120) {
+            if (index1 == 122) {
                 console.log("program finished");
                 writeToDb();
             }
@@ -671,7 +642,7 @@ async function scrapeFortunaMatchOdds(url, ID) {
             //document.querySelectorAll(".market h3")
         let mapMarkets = [
             ' Pauza sau final pariaza pe rezultatul primei reprize sau rezultatul final (daca meciul nu este finalizat, pariurile vor fi anulate) ',
-            ' Victorie fara egal pariaza pe victoria echipei gazda sau oaspete, in caz de egalitate pariurile sunt nule ',
+            ' Victorie fara egal Pariaza pe castigatoarea meciului. In caz de egalitate in timp regulamentar, se acorda cota 1.00 ',
             ' Total goluri / Total goluri asiatice ',
             ' Ambele echipe marcheaza sau peste goluri in meci ',
             ' Ambele marcheaza ',
@@ -707,6 +678,8 @@ async function scrapeFortunaMatchOdds(url, ID) {
         for (let index = 0; index < allMarketH3.length; index++) {
             mapMarkets.forEach((el, index1) => {
                 if (el == allMarketH3[index].innerText.replace(/\s{2,}/g, ' ')) {
+                    console.log("Debug here");
+                    console.log(allMarketH3[index].innerText.replace(/\s{2,}/g, ' '));
                     let oddsGroup = allMarketH3[index].nextElementSibling.querySelectorAll('.odds-group a');
                     for (let indexOdds = 0; indexOdds < oddsGroup.length; indexOdds++) {
                         let oddValue = oddsGroup[indexOdds].querySelector('.odds-value').textContent;
@@ -828,15 +801,7 @@ function formatTime(ms) {
     }
 }
 
-function checkIfEventHasMarkets(match) {
-    if (match.matchOdds) {
-        if (match.matchOdds.markets)
-            return true;
-        return false;
-    } else {
-        return false;
-    }
-}
+
 
 function compareBetanoWithFortunaMatches() { //cauta meciurile care sunt disponibilie si pe fortuna si pe betano
     console.log('started comparing the odds');
@@ -886,240 +851,9 @@ function compareBetanoWithFortunaMatches() { //cauta meciurile care sunt disponi
         }, 1000);
     });
 }
-async function compareOddsEvent(fortuna, betano, key) {
-    var flag1 = false;
-    var FLAG2 = false;
-    var tempIndexB = -1;
-    var tempIndexF = -1
-    var flag2 = false;
-    for (let index = 0; index < betano.markets.length; index++) {
-        // console.log(betano.markets[index].name);
-        if (fortuna.matchOdds.markets)
-            for (let index2 = 0; index2 < fortuna.matchOdds.markets.length; index2++) {
-                let resultC = -500;
-                if (fortuna.matchOdds.markets[index2]) {
-                    // console.log(fortuna.matchOdds.markets[index2].marketName);
-
-                    if (betano.markets[index].name == "Rezultat final" && fortuna.matchOdds.markets[index2].marketName == "1X2") {
-                        flag1 = true;
-                        tempIndexB = index;
-                        tempIndexF = index2;
-                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue); //ordine betano 1 X 2 ordine fortuna 1 2 X
-                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[2].oddValue);
-                        console.log(betano.markets[index].selections[2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
-                        resultC = calculator3way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue, true);
-                        var htmlString = '<div class="card" >' +
-                            '<div class="card-header"onclick="toggleDropdown(this)">' +
-                            '<h1 class="card-title"> <i class="fas fa-futbol"></i> ' + " " + betano.shortName + " profit " + resultC + " lei" +
-                            '</h1>' +
-                            '<p class="card-start-time">' + await returnTIme(key) + '</p>' +
-                            '<i class="fas fa-angle-down" id="angle-down"></i>' +
-                            '</div>' +
-                            '<div class="card-body dropdown-content" id="myDropdown" style="display: none;">' +
-                            '<div class="card-group">' +
-                            '<div class="card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title 1">' + betano.markets[index].selections[0].fullName + '</h5>' +
-                            '<p class="card-text">Odds: <span>' + biggerNr(betano.markets[index].selections[0].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue) + '</span></p>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title x">' + betano.markets[index].selections[1].fullName + '</h5>' +
-                            '<p class="card-text">Odds: <span>' + biggerNr(betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue) + '</span></p>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title 2">' + betano.markets[index].selections[2].fullName + '</h5>' +
-                            '<p class="card-text">Odds: <span>' + biggerNr(betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue) + '</span></p>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="text-center mt-3">' +
-                            '<a class="btn btn-primary" target="_blank" href="">Pariaza aici</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-                        if (resultC > -2) {
-                            if (flag2 == false) {
-                                var div = document.createElement("div");
-                                div.className = "column";
-                                document.body.appendChild(div);
-                                flag2 = true;
-                            }
-                            document.body.querySelector('.column').innerHTML += htmlString;
-                        }
 
 
-                    }
-                    if (betano.markets[index].name == "Handicap Asiatic (Scorul actual 0 - 0)") { // se repeta de 8 ori pentru ca trebuie ca if-ul sa aiba un && ca si comparatie cu fortuna 
-                        console.log('Handicap Asiatic');
-                        console.log(betano.markets[index].selections[0].name);
-                        console.log("null" + betano.markets[index].selections[0].price);
-                        console.log(betano.markets[index].selections[1].name);
-                        console.log("null" + betano.markets[index].selections[0].price);
-                        // compareAndCalculate(betano.markets[index].selections, fortuna.matchOdds.markets[index2].allMarkets);
-                    }
-                    if (betano.markets[index].name == "Șansă dublă" && fortuna.matchOdds.markets[index2].marketName == "1X-X2-12") {
-                        console.log('Sansa Dubla');
-                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);
-                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
-                        console.log(betano.markets[index].selections[2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[2].oddValue);
-                        calculator3way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue)
 
-                        if (flag1 == true) {
-                            console.log("match Key: " + key);
-                            console.log('Team 1 compared with  X2');
-                            calculateProfit2way(biggerNr(betano.markets[tempIndexB].selections[0].price, fortuna.matchOdds.markets[tempIndexF].allMarkets[0].oddValue), biggerNr(betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue));
-                            console.log('Team 2 compared with  1X');
-                            calculateProfit2way(biggerNr(betano.markets[tempIndexB].selections[2].price, fortuna.matchOdds.markets[tempIndexF].allMarkets[1].oddValue), biggerNr(betano.markets[index].selections[0].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue));
-                            console.log('Egal compared with  12');
-                            calculateProfit2way(biggerNr(betano.markets[tempIndexB].selections[1].price, fortuna.matchOdds.markets[tempIndexF].allMarkets[2].oddValue), biggerNr(betano.markets[index].selections[2].price, fortuna.matchOdds.markets[index2].allMarkets[2].oddValue));
-                            flag1 = false;
-                            tempIndexB = -1;
-                            tempIndexF = -1;
-                        }
-
-
-                    }
-                    if (betano.markets[index].name == "Ambele echipe înscriu" && fortuna.matchOdds.markets[index2].marketName == " Ambele marcheaza ") {
-                        console.log('Amebele inscriu ');
-                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);
-                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
-                        calculator2way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue)
-                    }
-                    if (betano.markets[index].name == "Niciun pariu pe egal" && fortuna.matchOdds.markets[index2].marketName == " Victorie fara egal ") {
-                        console.log('Niciun pariu pe egal');
-                        console.log(betano.markets[index].selections[0].price + " " + fortuna.matchOdds.markets[index2].allMarkets[0].oddValue);
-                        console.log(betano.markets[index].selections[1].price + " " + fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
-                        calculator2way(betano.markets[index].selections[0].price, betano.markets[index].selections[1].price, fortuna.matchOdds.markets[index2].allMarkets[0].oddValue, fortuna.matchOdds.markets[index2].allMarkets[1].oddValue);
-                        htmlString += '<div class="card-group">' +
-                            '<div class="card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title 1">' + betano.markets[index].selections[0].fullName + '</h5>' +
-                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[0].price + '</span></p>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="card">' +
-                            '<div class="card-body">' +
-                            '<h5 class="card-title 2">' + betano.markets[index].selections[1].fullName + '</h5>' +
-                            '<p class="card-text">Odds: <span>' + betano.markets[index].selections[1].price + '</span></p>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="text-center mt-3">' +
-                            '<a class="btn btn-primary" target="_blank" href="">Pariaza aici</a>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-                        if (resultC > -20)
-                            document.body.querySelector('.column').innerHTML += htmlString;
-
-                    }
-                    if (betano.markets[index].name == "Total goluri Peste/Sub (suplimentar)" && fortuna.matchOdds.markets[index2].marketName == " Total goluri / Total goluri asiatice ") {
-                        console.log('Total goluri Peste/Sub');
-                        compareAndCalculate(betano.markets[index].selections, fortuna.matchOdds.markets[index2].allMarkets);
-                    }
-
-                    if (betano.markets[index].name == "Pauză/Final" && fortuna.matchOdds.markets[index2].marketName == " Pauza/final ") {
-                        console.log('Pauza Final');
-                        for (let c1 = 0; c1 < fortuna.matchOdds.markets[index2].allMarkets.length; c1++) {
-                            // console.log(fortuna.matchOdds.markets[index2].allMarkets[c1].oddName);
-                            for (let c2 = 0; c2 < betano.markets[index].selections.length; c2++) {
-                                // console.log(betano.markets[index].selections[c2].name);
-                                if (fortuna.matchOdds.markets[index2].allMarkets[c1].oddName == betano.markets[index].selections[c2].name) {
-                                    console.log(fortuna.matchOdds.markets[index2].allMarkets[c1].oddName);
-                                    console.log(betano.markets[index].selections[c2].price + " " + fortuna.matchOdds.markets[index2].allMarkets[c1].oddValue); //ordine betano 1 X 2 ordine fortuna 1 2 X
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-            }
-        else {
-
-            // scrapeFortunaMatchOdds(fortuna.eFortunaUrl, fortuna.sportRadarID);
-            console.log('cote adaugate la');
-        }
-
-    }
-}
-
-function compareAndCalculate(betano, fortuna) {
-    for (let index = 0; index < betano.length; index++) {
-        for (let index1 = 0; index1 < fortuna.length; index1++) {
-            if (betano[index].name.toLowerCase().split(" ")[0] == "peste" && fortuna[index1].oddName.toLowerCase().split(' ')[0] == "sub" && betano[index].name.toLowerCase().split(" ")[1] == fortuna[index1].oddName.toLowerCase().split(' ')[1]) {
-                console.log(betano[index].name.toLowerCase()); //PESTE
-                console.log(betano[index].price + " " + fortuna[index1 + 1].oddValue);
-                console.log(betano[index + 1].price + " " + fortuna[index1].oddValue);
-                console.log(fortuna[index1].oddName.toLowerCase()); //SUB
-                calculator2way(betano[index].price, betano[index + 1].price, fortuna[index1 + 1].oddValue, fortuna[index1].oddValue)
-
-                // calculateProfit2way(betano[index].price,fortuna[index1].oddValue);
-            }
-        }
-
-    }
-}
-//pentru 1X2 type bets 
-function calculator3way(teamB, equalB, team2B, teamF, equalF, team2F, bool) {
-    let team1 = biggerNr(teamB, teamF);
-    let equal = biggerNr(equalB, equalF);
-    let team2 = biggerNr(team2B, team2F);
-    if (bool == true) {
-        return calculateProfit3way(team1, equal, team2, true);
-    } else
-        calculateProfit3way(team1, equal, team2);
-
-}
-
-function biggerNr(nr1, nr2) {
-    if (nr1 >= nr2) {
-        return nr1;
-    }
-    if (nr2 >= nr1) {
-        return nr2;
-    }
-
-}
-
-function calculateProfit3way(x, y, z, bool) {
-    let investment = 300;
-    let result;
-    result = investment - investment / x;
-    result = result - investment / y;
-    result = result - investment / z;
-    console.log(result);
-    if (result > 0) {
-        console.log("POZITIV");
-    }
-    if (bool == true) {
-        return result;
-    }
-
-}
-
-function calculator2way(result1B, result2B, result1F, result2F) {
-    let result1 = biggerNr(result1B, result1F);
-    let result2 = biggerNr(result2B, result2F);
-    calculateProfit2way(result1, result2);
-
-}
-
-function calculateProfit2way(x, y) {
-    let investment = 300;
-    let result;
-    result = investment - investment / x;
-    result = result - investment / y;
-    console.log(result);
-    if (result > 0) {
-        console.log("POZITIV");
-    }
-
-}
 async function showToFrontEnd() {
     var theUrl = "https://api.efortuna.ro/live3/api/live/matches/overview";
     let urlBetano = "https://ro.betano.com/api/sport/fotbal/meciurile-urmatoare-de-azi/";

@@ -7,131 +7,132 @@
 <html>
 
 <head>
-	<title>Odder</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	<link rel="stylesheet" href="css/profile.css" />
+    <title>Odder</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="css/profile.css" />
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 
 </head>
 
 <body class="is-preload">
-	
-	<br>
-	<div class="profileContainer">
-		<div class="imgContainer">
-			<img id="profileImg" src="" alt="">
-		</div>
-		<div class="credentials">
-			<div class="userDisplayName">
-				<p>Nume</p>
-				<p id="UserName"></p>
-			</div>
-			<div class="userDisplayEmail">
-				<p>Email</p>
-				<p id="email"></p>
-			</div>
-			<div class="userCurrency">
-				<p>Currency</p>
-				<p id="currency">RON</p>
-			</div>
-			<div class="userBetsPlaced">
-				<p>Bets placed</p>
-				<p id="betsPlaced"></p>
-			</div>
-			<div class="totalBettedValue">
-				<p>Bets placed</p>
-				<p id="BettedValue"></p>
-			</div>
-			<div class="userProfits">
-				<p>Profit</p>
-				<p id="profits"></p>
-			</div>
-		</div>
-		<button>Press me for showing the profit </button>
-	</div>
+
+    <br>
+    <div class="profileContainer">
+        <div class="imgContainer">
+            <img id="profileImg" src="" alt="">
+        </div>
+        <div class="credentials">
+            <div class="userDisplayName">
+                <p>Nume</p>
+                <p id="UserName"></p>
+            </div>
+            <div class="userDisplayEmail">
+                <p>Email</p>
+                <p id="email"></p>
+            </div>
+            <div class="userCurrency">
+                <p>Currency</p>
+                <p id="currency">RON</p>
+            </div>
+            <div class="userBetsPlaced">
+                <p>Bets placed</p>
+                <p id="betsPlaced"></p>
+            </div>
+            <div class="totalBettedValue">
+                <p>Bets placed</p>
+                <p id="BettedValue"></p>
+            </div>
+            <div class="userProfits">
+                <p>Profit</p>
+                <p id="profits"></p>
+            </div>
+        </div>
+        <button>Press me for showing the profit </button>
+    </div>
 
 
-	<!-- Content -->
+    <!-- Content -->
 
-	<!-- Sidebar -->
-	<div id="sidebar">
-		<a href="login.html" class="hide">Login</a>
-		<a href="login.html" class="hide1" style="margin-left:50px">Sign Up</a>
-		<h3 class="name"></h3>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <a href="login.html" class="hide">Login</a>
+        <a href="login.html" class="hide1" style="margin-left:50px">Sign Up</a>
+        <h3 class="name"></h3>
 
-		<!-- Logo -->
-		<h1 id="logo"><a href="#"> Odder</a></h1>
-		<br>
+        <!-- Logo -->
+        <h1 id="logo"><a href="#"> Odder</a></h1>
+        <br>
 
-		<!-- Nav -->
-		<nav id="nav">
-			<ul>
-				<div>
-					<li>
-						<a href="index.html">Home</a>
-					</li>
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <div>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
 
-				</div>	<div>
-					<li>
-						<a href="matches.html">Meciuri</a>
-					</li>
+                </div>
+                <div>
+                    <li>
+                        <a href="matches.html">Meciuri</a>
+                    </li>
 
-				</div>
-				<li class="logout"> <a>Log out</a> </li>
-				<script>
-					if (localStorage.getItem("User"))
-						document.querySelector(".logout").style.display = "inherit";
-				</script>
-			</ul>
-		</nav>
+                </div>
+                <li class="logout"> <a>Log out</a> </li>
+                <script>
+                    if (localStorage.getItem("User"))
+                        document.querySelector(".logout").style.display = "inherit";
+                </script>
+            </ul>
+        </nav>
 
-		<!-- Search -->
-		<section class="box search">
-			<form method="post" action="#">
-				<input type="text" class="text" name="search" placeholder="Search" />
-			</form>
-		</section>
+        <!-- Search -->
+        <section class="box search">
+            <form method="post" action="#">
+                <input type="text" class="text" name="search" placeholder="Search" />
+            </form>
+        </section>
 
-		<script>
-			let user = localStorage.getItem("User");
-			let email = localStorage.getItem("Email");
-			let photo = localStorage.getItem("Photo");
-			if (user) {
-				document.querySelector(".hide").style.display = "none";
-				document.querySelector(".hide1").style.display = "none";
-				document.querySelector(".name").onclick = () => {
-					window.location = window.location.href+"profil.html";
-				}
-				document.querySelector(".name").innerHTML = user;
-				document.querySelector(".name").style.cursor = "pointer";
-				// console.log("fkldajfkljsdklfajsdklfj alkdfj alksfj kalj")
-				document.querySelector("#UserName").innerHTML = user;
-				document.querySelector("#profileImg").src = photo;
-				document.querySelector("#email").innerHTML = email;
+        <script>
+            let user = localStorage.getItem("User");
+            let email = localStorage.getItem("Email");
+            let photo = localStorage.getItem("Photo");
+            if (user) {
+                document.querySelector(".hide").style.display = "none";
+                document.querySelector(".hide1").style.display = "none";
+                document.querySelector(".name").onclick = () => {
+                    window.location = window.location.href + "profil.html";
+                }
+                document.querySelector(".name").innerHTML = user;
+                document.querySelector(".name").style.cursor = "pointer";
+                // console.log("fkldajfkljsdklfajsdklfj alkdfj alksfj kalj")
+                document.querySelector("#UserName").innerHTML = user;
+                document.querySelector("#profileImg").src = photo;
+                document.querySelector("#email").innerHTML = email;
 
-			}
-		</script>
-	</div>
+            }
+        </script>
+    </div>
 
-	<!-- Scripts -->
-	<!-- <script type="module" src="sign-inGoogle.js"></script> -->
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/browser.min.js"></script>
-	<script src="assets/js/breakpoints.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-	<script src="fireabase-config.js"></script>
+    <!-- Scripts -->
+    <!-- <script type="module" src="sign-inGoogle.js"></script> -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="js/fireabase-config.js"></script>
 
-	<script src="getapi.js"></script>
-	<script type="module" src="sign-inGoogle.js"></script>
-	<script type="module" src="profile.js"></script>
+    <script src="js/getapi.js"></script>
+    <script type="module" src="js/signin/sign-inGoogle.js"></script>
+    <script type="module" src="js/profile.js"></script>
 
 
 

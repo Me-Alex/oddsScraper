@@ -271,24 +271,20 @@
 
                 </div>
 
-                <li class="current" onclick="show(this)"><a href="#">Show To Front End <i class="arrow down"></i></a>
+                <li class="current" onclick="show(this)"><a href="#">Fotball<i class="arrow down"></i></a>
                 </li>
                 <div class="show" style="display:none">
                     <li>
-                        <button onclick="getBetanoOdds()">getBetanoOdds</button>
+                        <button onclick="startFotball()">startFotball</button>
                     </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Tenis <i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
                     <li>
-                        <button onclick="getFortunaOdds()">getFortunaOdds</button>
+                        <button onclick="startTennis()">Start</button>
                     </li>
-                    <li>
-                        <button onclick="updateFortunaOdds(fortunaOdds)">updateFortunaOdds</button>
-                    </li>
-                    <li>
-                        <button onclick="compareFwithB()">compareFwithB</button>
-                    </li>
-                    <li>
-                        <button onclick="clock()">clock</button>
-                    </li>
+
                 </div>
                 <li class="current" onclick="show(this)"><a href="#">Calculator Dinamic <i class="arrow down"></i></a>
                 </li>
@@ -327,11 +323,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="fireabase-config.js"></script>
-
-    <script src="calculateoddsServer.js"></script>
-    <script src="getapi.js"></script>
-    <script type="module" src="sign-inGoogle.js"></script>
+    <script src="js/fireabase-config.js"></script>
+    <script src="js/fetch.js"></script>
+    <script src="serverjs/calculateoddsServer.js"></script>
+    <script src="serverjs/calculateTennisOddsServer.js"></script>
+    <script src="js/getapi.js"></script>
+    <script type="module" src="js/signin/sign-inGoogle.js"></script>
 
 
 

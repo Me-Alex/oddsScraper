@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Four-Input Column</title>
+    <style>
+        .column {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        
+        .input-field {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .calculate-button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .calculate-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <title>Odder</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+
+
+
+</head>
+
+<body>
+    <div class="column">
+        <div class="input-field">
+            <label for="input1">Money</label>
+            <input type="text" id="input1" value="300">
+        </div>
+        <div class="input-field">
+            <label for="input2">Odds 1:</label>
+            <input type="text" id="input2">
+        </div>
+        <div class="input-field">
+            <label for="input3">Odds 2:</label>
+            <input type="text" id="input3">
+        </div>
+        <div class="input-field">
+            <label for="input4">Odds 3:</label>
+            <input type="text" id="input4">
+        </div>
+        <h3 id="result">300</h3>
+        <br>
+        <button class="calculate-button" id="calculate" onclick="calculateProfit()">Calculate</button>
+        <button class="calculate-button" id="calculate" onclick="calculateProfit2()">Calculate</button>
+    </div>
+    <div id="sidebar">
+        <a href="login.html" class="hide">Login</a>
+        <a href="login.html" class="hide1" style="margin-left:50px">Sign Up</a>
+        <h3 class="name"></h3>
+
+        <!-- Logo -->
+        <h1 id="logo"><a href="#"> Odder</a></h1>
+        <br>
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <div>
+                    <li>
+                        <a href="matches.html">Meciuri</a>
+                    </li>
+                    <li>
+                        <a href="server.html">Server</a>
+                    </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Tenis Ai Data<i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
+                    <li>
+                        <button onclick="writeBetanoTennisDataTOCsv()">Get Tenis Results</button>
+                    </li>
+                    <li>
+                        <button onclick="takeTennisData()">Format Data For Ai </button>
+                    </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Tenis <i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
+                    <li>
+                        <button onclick="showToFrontEndEfortunaTennis()">showToFrontEndTennisFortuna</button>
+                    </li>
+                    <li>
+                        <button onclick="showToFrontEndTennisBetano()">showToFrontEndTennisBetano</button>
+                    </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Show To Front End <i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
+                    <li>
+                        <button onclick="compareAllBookmakersOdds()">compareAllBookmakersOdds</button>
+                    </li>
+                    <li>
+                        <button onclick="compareLiveOdds()">compareLiveOdds</button>
+                    </li>
+                    <li>
+                        <button onclick="showToFrontEndV2()">Show Matches Betano V2</button>
+                    </li>
+                    <li>
+                        <button onclick="showToFrontEnd()">Show Matches Betano old</button>
+                    </li>
+                    <li>
+                        <button onclick="unibetOddsScalp()">Show Matches Unibet</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="showToFrontEndEfortuna()">Show Matches Efortuna</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="compareBetanoWithFortunaMatches()">Compara Meciuri F cu
+                            B</button>
+                    </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Scrape FOr Matches <i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
+                    <!-- <li>
+                        <button class="esportButton" onclick="showToFrontEndEsportsBattleMatthes()">Esports Battle
+                            API</button>
+                    </li> -->
+                    <li>
+                        <button class="esportButton" onclick="checkEventsStartTime()">Event Start TIme old</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="writeMatchesToDB()">Incarca meciuri catre baza de
+                            date</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="removeMatches()">Remove</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="readDataFromDatabase()">Read data</button>
+                    </li>
+
+                    <!-- <li>
+                        <button class="esportButton" onclick="checkHowManyEqualsHasBeenMade()">Nr Total De meciuri /Nr
+                            Egaluri</button>
+                    </li> -->
+                    <li>
+                        <button class="esportButton" onclick="statisticiMeciuri()">Strategie Nr Par/Impar
+                            meciuri</button>
+                    </li>
+                </div>
+                <li class="current" onclick="show(this)"><a href="#">Strategies <i class="arrow down"></i></a>
+                </li>
+                <div class="show" style="display:none">
+                    <li>
+                        <button class="esportButton" onclick="writeMatchesToDB()">Incarca meciuri catre baza de
+                            date</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="removeMatches()">Remove</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="readDataFromDatabase()">Read data</button>
+                    </li>
+
+                    <li>
+                        <button class="esportButton" onclick="checkHowManyEqualsHasBeenMade()">Nr Total De meciuri /Nr
+                            Egaluri</button>
+                    </li>
+                    <li>
+                        <button class="esportButton" onclick="statisticiMeciuri()">Strategie Nr Par/Impar
+                            meciuri</button>
+                    </li>
+                </div>
+                <li class="logout"> <a>Log out</a> </li>
+                <script>
+                    if (localStorage.getItem("User"))
+                        document.querySelector(".logout").style.display = "inherit";
+                </script>
+            </ul>
+        </nav>
+
+        <!-- Search -->
+        <section class="box search">
+            <form method="post" action="#">
+                <input type="text" class="text" name="search" placeholder="Search" />
+            </form>
+        </section>
+
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- <script type="module" src="sign-inGoogle.js"></script> -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="js/calculator/calculator.js"></script>
+
+
+
+</body>
+
+</html>

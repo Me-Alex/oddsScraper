@@ -89,3 +89,52 @@ mapData3.forEach(element=>{
 
 
 add a feature to calculate how many of the gamas were won by the THEAM 1 with the same starting time 
+
+
+
+
+
+
+
+
+
+get fortuna live matches 
+
+https://api.efortuna.ro/live3/api/live/matches/overview
+https://api.efortuna.ro/live3/api/live/matches/detail/LRO4268699
+
+
+
+
+
+
+
+
+
+//betano fotbal 
+let var1=document.querySelectorAll('.competition-box');
+console.log(var1);
+let json=[];
+for(let i=0;i<var1.length&&i<118;i++)
+    {
+        let var2=var1[i].querySelectorAll('.title-part')[1];
+        json.push(var2.querySelector('a').href.split('fotbal/')[1]);
+    }
+
+//betano tenis
+
+let var1=document.querySelectorAll('.competition-box');
+console.log(var1);
+let json=[];
+for(let i=0;i<var1.length&&i<83;i++)
+    {
+        let var2=var1[i].querySelectorAll('.title-part')[1];
+        json.push(var2.querySelector('a').href.split('tenis/')[1]);
+    }
+
+
+
+
+//
+
+scrapeFortunaMatchOdds("https://efortuna.ro/pariuri-online/fotbal/suedia-1/halmstad-ifk-goteborg-MRO76416226","37844179")
